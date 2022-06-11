@@ -1,6 +1,7 @@
 const express = require("express");
 const serverConfig = require("./app/config/server.config");
 const bodyParser = require("body-parser");
+const userRoutes = require("./app/routes/user.routes");
 require("./app/config/server.config");
 
 const PORT = serverConfig.PORT || 5000;
@@ -20,6 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //Routes
+app.use("/api/user", userRoutes);
 app.get("/api", (req, res) => res.status(200).send({ message: "test server" }));
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
