@@ -19,7 +19,17 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
+    phoneNumber: {
+      type: String,
+      required: true,
+    },
     password: {
+      type: String,
+      required: true,
+      max: 1024,
+      minLength: 6,
+    },
+    passwordConfirmation: {
       type: String,
       required: true,
       max: 1024,
