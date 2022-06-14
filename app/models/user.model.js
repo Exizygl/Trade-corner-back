@@ -22,14 +22,22 @@ const userSchema = new mongoose.Schema(
     phoneNumber: {
       type: String,
       required: true,
+      maxLength: 14,
     },
-    password: {
+    adress: {
       type: String,
       required: true,
-      max: 1024,
-      minLength: 6,
     },
-    passwordConfirmation: {
+    zipcode: {
+      type: String,
+      required: true,
+      maxLength: 5,
+    },
+    ville: {
+      type: String,
+      required: true,
+    },
+    password: {
       type: String,
       required: true,
       max: 1024,

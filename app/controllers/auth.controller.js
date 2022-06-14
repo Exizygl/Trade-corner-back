@@ -9,7 +9,7 @@ const createToken = (id) => {
 };
 
 module.exports.signUp = async (req, res) => {
-  const { pseudo, email, phoneNumber, password, passwordConfirmation } =
+  const { pseudo, email, phoneNumber, adress, zipcode, ville, password } =
     req.body;
 
   try {
@@ -17,8 +17,10 @@ module.exports.signUp = async (req, res) => {
       pseudo,
       email,
       phoneNumber,
+      adress,
+      zipcode,
+      ville,
       password,
-      passwordConfirmation,
     });
     res.status(201).json({ user: user._id });
   } catch (err) {
