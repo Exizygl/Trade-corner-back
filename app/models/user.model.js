@@ -31,13 +31,19 @@ const userSchema = new mongoose.Schema(
     zipcode: {
       type: String,
       required: true,
-      maxLength: 5,
+      maxlength: 5,
     },
     ville: {
       type: String,
       required: true,
     },
     password: {
+      type: String,
+      required: true,
+      max: 1024,
+      minLength: 6,
+    },
+    passwordConfirmation: {
       type: String,
       required: true,
       max: 1024,
@@ -52,6 +58,14 @@ const userSchema = new mongoose.Schema(
 userSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+userSchema.pre("save", async function (next) {
+  const salt = await bcrypt.genSalt();
+  this.passwordConfirmation = await bcrypt.hash(
+    this.passwordConfirmation,
+    salt
+  );
   next();
 });
 const UserModel = mongoose.model("user", userSchema);
