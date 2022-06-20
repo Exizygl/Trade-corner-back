@@ -12,6 +12,12 @@ const userSchema = new mongoose.Schema(
       unique: true,
       trimp: true,
     },
+    name: {
+      type: String,
+      required: true,
+      minLength: 3,
+      maxLength: 56,
+    },
     email: {
       type: String,
       required: true,
@@ -19,7 +25,31 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
+    phoneNumber: {
+      type: String,
+      required: true,
+      maxLength: 20,
+    },
+    adress: {
+      type: String,
+      required: true,
+    },
+    zipcode: {
+      type: String,
+      required: true,
+      maxLength: 5,
+    },
+    ville: {
+      type: String,
+      required: true,
+    },
     password: {
+      type: String,
+      required: true,
+      max: 1024,
+      minLength: 6,
+    },
+    passwordConfirmation: {
       type: String,
       required: true,
       max: 1024,
@@ -34,6 +64,11 @@ const userSchema = new mongoose.Schema(
 userSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt();
   this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+userSchema.pre("save", async function (next) {
+  const salt = await bcrypt.genSalt();
+  this.passwordConfirmation = await bcrypt.hash(this.passwordConfirmation, salt);
   next();
 });
 const UserModel = mongoose.model("user", userSchema);
