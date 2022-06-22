@@ -10,21 +10,8 @@ const createToken = (id) => {
 
 module.exports.signUp = async (req, res) => {
   console.log("signUp");
-  const {
-    pseudo,
-    name,
-    email,
-    phoneNumber,
-    adress,
-    zipcode,
-    ville,
-    password,
-    passwordConfirmation,
-    cgu,
-  } = req.body;
-
   try {
-    const user = await UserModel.create({
+    const {
       pseudo,
       name,
       email,
@@ -35,11 +22,39 @@ module.exports.signUp = async (req, res) => {
       password,
       passwordConfirmation,
       cgu,
-    });
-    res.status(201).json({ user: user._id });
+    } = req.body;
+
+    if (
+      !pseudo ||
+      !name ||
+      !phoneNumber ||
+      !adress ||
+      !zipcode ||
+      !ville ||
+      !email ||
+      !password ||
+      !passwordConfirmation ||
+      !cgu
+    )
+      return res.status(400).json({ msg: "Merci de remplir tous les champs." });
+
+    if (!validateEmail(email))
+      return res.status(400).json({ msg: "Invalid email." });
+
+    const user = await User.findOne({ email });
+
+    if (user) return res.status(400).json({ msg: "Cette email existe déjà !" });
+
+    res.json({ msg: "Création de compte réussi !" });
   } catch (err) {
-    res.status(400).send({ err });
+    return res.status(500).json({ msg: err.message });
   }
+};
+
+const validateEmail = (email) => {
+  return email.match(
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  );
 };
 
 module.exports.signIn = async (req, res) => {

@@ -2,7 +2,9 @@ const express = require("express");
 const serverConfig = require("./app/config/server.config");
 const bodyParser = require("body-parser");
 const userRoutes = require("./app/routes/user.routes");
-const boutiqueRoutes = require("./app/routes/boutique.routes")
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const fileUpload = require("express-fileupload");
 require("./app/config/server.config");
 
 const PORT = serverConfig.PORT || 5000;
@@ -20,6 +22,14 @@ app.use(function (req, res, next) {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.json());
+app.use(cors());
+app.use(cookieParser());
+app.use(
+  fileUpload({
+    useTempFiles: true,
+  })
+);
 
 //Routes
 app.use("/api/auth", userRoutes);

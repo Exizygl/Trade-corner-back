@@ -6,11 +6,11 @@ const userSchema = new mongoose.Schema(
   {
     pseudo: {
       type: String,
-      required: true,
+      required: [true, "Veuillez entrer votre pseudo"],
       minLength: 3,
       maxLength: 56,
       unique: true,
-      trimp: true,
+      trim: true,
     },
     name: {
       type: String,
@@ -23,7 +23,17 @@ const userSchema = new mongoose.Schema(
       required: true,
       validate: [isEmail],
       lowercase: true,
+      unique: true,
       trim: true,
+    },
+    role: {
+      type: Number,
+      default: 0, // 0 = user, 1 = admin
+    },
+    Avatar: {
+      type: String,
+      default:
+        "https://res.cloudinary.com/devatchannel/image/upload/v1602752402/avatar/avatar_cugq40.png",
     },
     phoneNumber: {
       type: String,
@@ -68,7 +78,10 @@ userSchema.pre("save", async function (next) {
 });
 userSchema.pre("save", async function (next) {
   const salt = await bcrypt.genSalt();
-  this.passwordConfirmation = await bcrypt.hash(this.passwordConfirmation, salt);
+  this.passwordConfirmation = await bcrypt.hash(
+    this.passwordConfirmation,
+    salt
+  );
   next();
 });
 const UserModel = mongoose.model("user", userSchema);
