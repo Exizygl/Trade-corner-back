@@ -2,13 +2,7 @@ const UserModel = require("../../models/user.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-const maxAge = 3 * 24 * 60 * 60 * 1000;
-const createToken = (id) => {
-  return jwt.sign({ id }, process.env.TOKEN_SECRET, {
-    expiresIn: 3 * 24 * 60 * 60 * 1000,
-  });
-};
-
+const { CLIENT_URL } = process.env;
 module.exports.signUp = async (req, res) => {
   console.log(req.body);
   try {
@@ -47,8 +41,6 @@ module.exports.signUp = async (req, res) => {
         .status(400)
         .json({ msg: "Le mot de passe doit être au moins de 6 caractères" });
 
-    res.json({ msg: "Création de compte réussi !" });
-
     const passwordHash = await bcrypt.hash(password, 12);
 
     const newUser = {
@@ -63,6 +55,13 @@ module.exports.signUp = async (req, res) => {
     };
 
     const activation_token = createActivationToken(newUser);
+
+    const url = `${CLIENT_URL}/user/activate/${activation_token}`;
+    // sendMail(email, url);
+
+    res.json({
+      msg: "Création de compte réussi ! Veuillez activer votre email pour commencer.",
+    });
   } catch (err) {
     return res.status(500).json({ msg: err.message });
   }
