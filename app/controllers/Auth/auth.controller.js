@@ -1,6 +1,7 @@
 const UserModel = require("../../models/user.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const sendMail = require("./sendMail");
 
 const { CLIENT_URL } = process.env;
 module.exports.signUp = async (req, res) => {
@@ -15,7 +16,6 @@ module.exports.signUp = async (req, res) => {
       zipcode,
       ville,
       password,
-      cgu,
     } = req.body;
 
     if (
@@ -57,12 +57,13 @@ module.exports.signUp = async (req, res) => {
     const activation_token = createActivationToken(newUser);
 
     const url = `${CLIENT_URL}/user/activate/${activation_token}`;
-    // sendMail(email, url);
+    sendMail(email, url);
 
     res.json({
       msg: "Création de compte réussi ! Veuillez activer votre email pour commencer.",
     });
   } catch (err) {
+    console.log(err);
     return res.status(500).json({ msg: err.message });
   }
 };
@@ -74,19 +75,19 @@ function validateEmail(email) {
 }
 
 const createActivationToken = (payload) => {
-  return jwt.sign(payload, proccess.env.ACTIVATION_TOKEN_SECRET, {
+  return jwt.sign(payload, process.env.ACTIVATION_TOKEN_SECRET, {
     expiresIn: "5m",
   });
 };
 
 const createAccessToken = (payload) => {
-  return jwt.sign(payload, proccess.env.ACCESS_TOKEN_SECRET, {
+  return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "15m",
   });
 };
 
 const createRefreshToken = (payload) => {
-  return jwt.sign(payload, proccess.env.REFRESH_TOKEN_SECRET, {
+  return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
     expiresIn: "7d",
   });
 };
