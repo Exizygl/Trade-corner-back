@@ -91,16 +91,16 @@ const createRefreshToken = (payload) => {
   });
 };
 
-// module.exports.signIn = async (req, res) => {
-//   console.log("signIn");
-//   const { email, password } = req.body;
+module.exports.signIn = async (req, res) => {
+  console.log("signIn");
+  const { email, password } = req.body;
 
-//   try {
-//     const user = await UserModel.create(email, password);
-//     const token = createToken(user._id);
-//     res.cookie("jwt", token, { httpOnly: true, maxAge });
-//     res.status(200).json({ user: user._id });
-//   } catch (err) {
-//     res.status(400).json(err);
-//   }
-// };
+  try {
+    const user = await UserModel.create(email, password);
+    const token = createToken(user._id);
+    res.cookie("jwt", token, { httpOnly: true, maxAge });
+    res.status(200).json({ user: user._id });
+  } catch (err) {
+    res.status(400).json(err);
+  }
+};
