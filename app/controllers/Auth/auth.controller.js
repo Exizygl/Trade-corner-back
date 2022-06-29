@@ -75,6 +75,48 @@ const userCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
+
+  activateEmail: async (req, res) => {
+    try {
+      const { activation_token } = req.body;
+      const user = jwt.verify(
+        activation_token,
+        process.env.ACTIVATION_TOKEN_SECRET
+      );
+
+      const {
+        pseudo,
+        name,
+        email,
+        phoneNumber,
+        adress,
+        zipcode,
+        ville,
+        password,
+      } = user;
+
+      const check = await UserModel.findOne({ email });
+      if (check)
+        return res.status(400).json({ msg: "Cette adresse mail existe déjà." });
+
+      const newUser = new UserModel({
+        pseudo,
+        name,
+        email,
+        phoneNumber,
+        adress,
+        zipcode,
+        ville,
+        password,
+      });
+
+      await newUser.save();
+
+      res.json({ msg: "Votre compte est activé !" });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
 };
 
 module.exports = userCtrl;
