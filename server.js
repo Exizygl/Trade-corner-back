@@ -3,6 +3,7 @@ const serverConfig = require("./app/config/server.config");
 const bodyParser = require("body-parser");
 const userRoutes = require("./app/routes/user.routes");
 const cors = require("cors");
+const { hasJWT } = require('./app/middlewares/jwt');
 const cookieParser = require("cookie-parser");
 const fileUpload = require("express-fileupload");
 require("./app/config/server.config");

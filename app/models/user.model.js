@@ -70,6 +70,25 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
+// userSchema.pre("save", async function (next) {
+//   const salt = await bcrypt.genSalt();
+//   this.passwordConfirmation = await bcrypt.hash(
+//     this.passwordConfirmation,
+//     salt
+//   );
+//   next();
+// });
+
+// ======= Pour la connexion ========== //
+userSchema.methods.comparePassword = async function (candidatePassword, cb) {
+  return await new Promise((resolve, reject) => {
+    bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {
+      if (err) reject(err);
+
+      resolve(isMatch);
+    });
+  });
+};
 
 const UserModel = mongoose.model("user", userSchema);
 module.exports = UserModel;
