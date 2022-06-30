@@ -117,6 +117,32 @@ const userCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
+
+  login: async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      const user = await UserModel.findOne({ email });
+      if (!user)
+        return res
+          .status(400)
+          .json({ msg: "Cette adresse mail n'existe pas." });
+
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch)
+        return res.status(400).json({ msg: "Mot de passe incorrect" });
+
+      const refresh_token = createRefreshToken({ id: user.id });
+      res.cookie("refreshtoken", refresh_token, {
+        httpOnly: true,
+        path: "/user/refresh_token",
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
+      });
+
+      res.json({ msg: "Login success !" });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
 };
 
 module.exports = userCtrl;
