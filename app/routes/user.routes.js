@@ -5,6 +5,7 @@ const userController = require("../controllers/Auth/user.controller");
 // Router POST
 
 router.post("/register", userCtrl.register);
+router.post("/activation", userCtrl.activateEmail);
 // router.post("/login", authController.signIn);
 
 // Router GET
