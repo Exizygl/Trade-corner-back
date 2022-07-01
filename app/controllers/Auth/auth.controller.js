@@ -61,17 +61,17 @@ const userCtrl = {
         ville,
         password: passwordHash,
       });
-      res.status(201).json({ user: user._id });
 
       const activation_token = createActivationToken(newUser);
 
-      const url = `${CLIENT_URL}/mail/activate/${activation_token}`;
+      const url = `${CLIENT_URL}/user/activate/${activation_token}`;
       sendMail(email, url, "Vérifiez votre adresse email");
 
-      res.json({
+      res.status(201).json({
         msg: "Votre compte a été enregistrer ! Veuillez activé votre adresse mail s'il vous plaît pour commencer.",
       });
     } catch (err) {
+      console.log(err);
       return res.status(500).json({ msg: err.message });
     }
   },
@@ -109,6 +109,7 @@ const userCtrl = {
         ville,
         password,
       });
+      res.status(201).json({ newUser: newUser._id });
 
       await newUser.save();
 
@@ -117,64 +118,36 @@ const userCtrl = {
       return res.status(500).json({ msg: err.message });
     }
   },
+
+  login: async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      const user = await UserModel.findOne({ email });
+
+      if (!user)
+        return res
+          .status(400)
+          .json({ msg: "Cette adresse mail n'existe pas." });
+
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch)
+        return res.status(400).json({ msg: "Mot de passe incorrect" });
+
+      const refresh_token = createRefreshToken({ id: user.id });
+      res.cookie("refreshtoken", refresh_token, {
+        httpOnly: true,
+        path: "/user/refresh_token",
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
+      });
+
+      res.json({ msg: "Login success !" });
+    } catch (err) {
+      return res.status(500).json({ msg: err.message });
+    }
+  },
 };
 
 module.exports = userCtrl;
-
-// module.exports.signIn = async (req, res) => {
-//   console.log("signIn");
-//   const { email, password } = req.body;
-
-//   try {
-//     const user = await UserModel.login(email, password);
-//     const token = createToken(user._id);
-//     res.cookie("jwt", token, { httpOnly: true, maxAge });
-//     res.status(200).json({ user: user._id });
-//   } catch (err) {
-//     console.log(err);
-//     res.status(400).json(err);
-//   }
-// };
-
-// const maxAge = 3 * 24 * 60 * 60 * 1000;
-// const createToken = (id) => {
-//   return jwt.sign({ id }, process.env.TOKEN_SECRET, {
-//     expiresIn: 3 * 24 * 60 * 60 * 1000,
-//   });
-// };
-
-// module.exports.signUp = async (req, res) => {
-//   console.log(req.body);
-//   const {
-//     pseudo,
-//     name,
-//     email,
-//     phoneNumber,
-//     adress,
-//     zipcode,
-//     ville,
-//     password,
-//     passwordConfirmation,
-//   } = req.body;
-
-//   try {
-//     const user = await UserModel.create({
-//       pseudo,
-//       name,
-//       email,
-//       phoneNumber,
-//       adress,
-//       zipcode,
-//       ville,
-//       password,
-//       passwordConfirmation,
-//     });
-//     res.status(201).json({ user: user._id });
-//   } catch (err) {
-//     console.log(err);
-//     res.status(400).send({ err });
-//   }
-// };
 
 function validateEmail(email) {
   const re =
@@ -183,19 +156,19 @@ function validateEmail(email) {
 }
 
 const createActivationToken = (payload) => {
-  return jwt.sign(payload, process.env.ACTIVATION_TOKEN_SECRET, {
+  return jwt.sign({ payload }, process.env.ACTIVATION_TOKEN_SECRET, {
     expiresIn: "5m",
   });
 };
 
 const createAccessToken = (payload) => {
-  return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+  return jwt.sign({ payload }, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "15m",
   });
 };
 
 const createRefreshToken = (payload) => {
-  return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+  return jwt.sign({ payload }, process.env.REFRESH_TOKEN_SECRET, {
     expiresIn: "7d",
   });
 };
