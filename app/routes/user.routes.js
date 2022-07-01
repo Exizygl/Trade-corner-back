@@ -47,4 +47,6 @@ router.get("/", userController.getAllUsers);
 router.get("/:id", userController.userInfo);
 // Router put
 
+router.post("updateUser/:id", userController.userInfoUpdate)
+
 module.exports = router;

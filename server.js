@@ -38,3 +38,5 @@ app.use("/api/user", userRoutes);
 app.get("/api", (req, res) => res.status(200).send({ message: "test server" }));
 
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+
+
