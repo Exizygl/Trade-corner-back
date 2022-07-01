@@ -61,17 +61,17 @@ const userCtrl = {
         ville,
         password: passwordHash,
       });
-      res.status(201).json({ user: user._id });
 
       const activation_token = createActivationToken(newUser);
 
-      const url = `${CLIENT_URL}/mail/activate/${activation_token}`;
+      const url = `${CLIENT_URL}/user/activate/${activation_token}`;
       sendMail(email, url, "Vérifiez votre adresse email");
 
-      res.json({
+      res.status(201).json({
         msg: "Votre compte a été enregistrer ! Veuillez activé votre adresse mail s'il vous plaît pour commencer.",
       });
     } catch (err) {
+      console.log(err);
       return res.status(500).json({ msg: err.message });
     }
   },
@@ -109,6 +109,7 @@ const userCtrl = {
         ville,
         password,
       });
+      res.status(201).json({ newUser: newUser._id });
 
       await newUser.save();
 
@@ -122,6 +123,7 @@ const userCtrl = {
     try {
       const { email, password } = req.body;
       const user = await UserModel.findOne({ email });
+
       if (!user)
         return res
           .status(400)
@@ -147,61 +149,6 @@ const userCtrl = {
 
 module.exports = userCtrl;
 
-// module.exports.signIn = async (req, res) => {
-//   console.log("signIn");
-//   const { email, password } = req.body;
-
-//   try {
-//     const user = await UserModel.login(email, password);
-//     const token = createToken(user._id);
-//     res.cookie("jwt", token, { httpOnly: true, maxAge });
-//     res.status(200).json({ user: user._id });
-//   } catch (err) {
-//     console.log(err);
-//     res.status(400).json(err);
-//   }
-// };
-
-// const maxAge = 3 * 24 * 60 * 60 * 1000;
-// const createToken = (id) => {
-//   return jwt.sign({ id }, process.env.TOKEN_SECRET, {
-//     expiresIn: 3 * 24 * 60 * 60 * 1000,
-//   });
-// };
-
-// module.exports.signUp = async (req, res) => {
-//   console.log(req.body);
-//   const {
-//     pseudo,
-//     name,
-//     email,
-//     phoneNumber,
-//     adress,
-//     zipcode,
-//     ville,
-//     password,
-//     passwordConfirmation,
-//   } = req.body;
-
-//   try {
-//     const user = await UserModel.create({
-//       pseudo,
-//       name,
-//       email,
-//       phoneNumber,
-//       adress,
-//       zipcode,
-//       ville,
-//       password,
-//       passwordConfirmation,
-//     });
-//     res.status(201).json({ user: user._id });
-//   } catch (err) {
-//     console.log(err);
-//     res.status(400).send({ err });
-//   }
-// };
-
 function validateEmail(email) {
   const re =
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -209,19 +156,19 @@ function validateEmail(email) {
 }
 
 const createActivationToken = (payload) => {
-  return jwt.sign(payload, process.env.ACTIVATION_TOKEN_SECRET, {
+  return jwt.sign({ payload }, process.env.ACTIVATION_TOKEN_SECRET, {
     expiresIn: "5m",
   });
 };
 
 const createAccessToken = (payload) => {
-  return jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+  return jwt.sign({ payload }, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "15m",
   });
 };
 
 const createRefreshToken = (payload) => {
-  return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+  return jwt.sign({ payload }, process.env.REFRESH_TOKEN_SECRET, {
     expiresIn: "7d",
   });
 };

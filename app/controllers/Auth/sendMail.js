@@ -14,24 +14,16 @@ const oauth2Client = new OAuth2(
   MAILING_SERVICE_CLIENT_ID,
   MAILING_SERVICE_CLIENT_SECRET,
   MAILING_SERVICE_REFRESH_TOKEN,
+
   OAUTH_PLAYGROUND
 );
 
 const sendEmail = (to, url, txt) => {
-  oauth2Client.setCredentials({
-    refresh_token: MAILING_SERVICE_REFRESH_TOKEN,
-  });
-
-  const accessToken = oauth2Client.getAccessToken();
   const smtpTransport = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      type: "OAuth2",
-      user: SENDER_EMAIL_ADDRESS,
-      clientId: MAILING_SERVICE_CLIENT_ID,
-      clientSecret: MAILING_SERVICE_CLIENT_SECRET,
-      refreshToken: MAILING_SERVICE_REFRESH_TOKEN,
-      accessToken,
+      user: "incubateurnumerique@gmail.com",
+      pass: "mtrnkbwzpdvrmknz",
     },
   });
 
@@ -40,8 +32,8 @@ const sendEmail = (to, url, txt) => {
     to: to,
     subject: "E-commerce",
     html: `
-        <div style="max-width: 700px; margin:auto; border: 10px solid #ddd; padding: 50px 20px; font-size: 110%;">
-            <h2 style="text-align: center; text-transform: uppercase;color: teal;">Welcome to the DevAT channel.</h2>
+        <div>
+            <h2>Bienvenue sur E-commerce SHOP</h2>
             <p>Toutes nos félicitations! Vous êtes presque prêt à commencer à utiliser E-Commerce ✮ SHOP.
             Cliquez simplement sur le bouton ci-dessous pour valider votre adresse e-mail.
             </p>
