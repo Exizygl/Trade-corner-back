@@ -65,6 +65,16 @@ const signIn = async (email, password, res) => {
   return { user, id_token: token };
 };
 
+// ======= LOGOUT ========= //
+
+const logout = async (req, res) => {
+  try {
+    res.clearCookie("refreshtoken", { path: "/user/refresh_token" });
+    return res.json({ msg: "Logged out." });
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+};
 module.exports = {
   signUp,
   signIn,
