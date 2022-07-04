@@ -1,7 +1,7 @@
 const UserModel = require("../../models/user.model");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const sendMail = require("./sendMail");
+// const sendMail = require("./sendMail");
 
 const { google } = require("googleapis");
 const { OAuth2 } = google.auth;
@@ -61,11 +61,11 @@ const userCtrl = {
         ville,
         password: passwordHash,
       });
+      console.log(req.body);
+      const activation_token = createActivationToken(req.body);
 
-      const activation_token = createActivationToken(newUser);
-
-      const url = `${CLIENT_URL}/user/activate/${activation_token}`;
-      sendMail(email, url, "Vérifiez votre adresse email");
+      // const url = `${CLIENT_URL}/user/activate/${activation_token}`;
+      // sendMail(email, url, "Vérifiez votre adresse email");
 
       res.status(201).json({
         msg: "Votre compte a été enregistrer ! Veuillez activé votre adresse mail s'il vous plaît pour commencer.",
@@ -76,48 +76,48 @@ const userCtrl = {
     }
   },
 
-  activateEmail: async (req, res) => {
-    try {
-      const { activation_token } = req.body;
-      const user = jwt.verify(
-        activation_token,
-        process.env.ACTIVATION_TOKEN_SECRET
-      );
+  // activateEmail: async (req, res) => {
+  //   try {
+  //     const { activation_token } = req.body;
+  //     const user = jwt.verify(
+  //       activation_token,
+  //       process.env.ACTIVATION_TOKEN_SECRET
+  //     );
 
-      const {
-        pseudo,
-        name,
-        email,
-        phoneNumber,
-        adress,
-        zipcode,
-        ville,
-        password,
-      } = user;
+  //     const {
+  //       pseudo,
+  //       name,
+  //       email,
+  //       phoneNumber,
+  //       adress,
+  //       zipcode,
+  //       ville,
+  //       password,
+  //     } = user;
 
-      const check = await UserModel.findOne({ email });
-      if (check)
-        return res.status(400).json({ msg: "Cette adresse mail existe déjà." });
+  //     const check = await UserModel.findOne({ email });
+  //     if (check)
+  //       return res.status(400).json({ msg: "Cette adresse mail existe déjà." });
 
-      const newUser = new UserModel({
-        pseudo,
-        name,
-        email,
-        phoneNumber,
-        adress,
-        zipcode,
-        ville,
-        password,
-      });
-      res.status(201).json({ newUser: newUser._id });
+  //     const newUser = new UserModel({
+  //       pseudo,
+  //       name,
+  //       email,
+  //       phoneNumber,
+  //       adress,
+  //       zipcode,
+  //       ville,
+  //       password,
+  //     });
+  //     res.status(201).json({ newUser: newUser._id });
 
-      await newUser.save();
+  //     await newUser.save();
 
-      res.json({ msg: "Votre compte est activé !" });
-    } catch (err) {
-      return res.status(500).json({ msg: err.message });
-    }
-  },
+  //     res.json({ msg: "Votre compte est activé !" });
+  //   } catch (err) {
+  //     return res.status(500).json({ msg: err.message });
+  //   }
+  // },
 
   // login: async (req, res) => {
   //   try {
@@ -149,11 +149,11 @@ const userCtrl = {
 
 module.exports = userCtrl;
 
-function validateEmail(email) {
-  const re =
-    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(email);
-}
+// function validateEmail(email) {
+//   const re =
+//     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+//   return re.test(email);
+// }
 
 const createActivationToken = (payload) => {
   return jwt.sign({ payload }, process.env.ACTIVATION_TOKEN_SECRET, {
