@@ -41,17 +41,11 @@ router.post("/login", async (req, res) => {
   }
 });
 
-// Router GET
 
-router.get("/", userController.getAllUsers);
-router.get("/:id", userController.userInfo);
-// Router put
-
-router.put("updateUser/:id", async (req, res) => {
+router.post("update/:id", async (req, res) => {
   try {
-    const user = await UserService.signUp(req.body);
-
-    user.password = "***";
+    console.log('I m everywhere');
+    const user = await userController.userInfoUpdate(req.body);
     return successCbk(res, 200, { user });
   } catch (error) {
     // const errors = signUpErrors(error)
@@ -59,6 +53,13 @@ router.put("updateUser/:id", async (req, res) => {
   }
 });
 
-userController.userInfoUpdate
+// Router GET
+
+router.get("/", userController.getAllUsers);
+router.get("/:id", userController.userInfo);
+// Router put
+
+
+
 
 module.exports = router;

@@ -18,8 +18,8 @@ module.exports.userInfo = (req, res) => {
 
 };
 
-const UserModification = {
-  userInfoUpdate: async = (req, res) => {
+
+module.exports.userInfoUpdate = (req, res) => {
     try {
       const {
         valueName,
@@ -95,5 +95,4 @@ const UserModification = {
 
     }
   }
-}
 
