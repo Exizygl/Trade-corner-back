@@ -32,7 +32,6 @@ const createActivationToken = (payload) => {
 };
 
 const sendEmail = (to, url, txt) => {
-  console.log(to, url, txt);
   const smtpTransport = nodemailer.createTransport({
     service: "gmail",
     auth: {
