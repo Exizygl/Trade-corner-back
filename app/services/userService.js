@@ -1,13 +1,34 @@
 const UserDAO = require("../daos/userDAO");
 const jwt = require("jsonwebtoken");
 const emailService = require("./emailService");
+const UserModel = require("../models/user.model");
 
 const signUp = async (user) => {
-  if (!emailService.validateEmail(user.email)) throw "Email invalide";
+  //   if (!emailService.validateEmail(user.email)) throw "Email invalide";
 
-  const userDB = await getByEmail(user.email);
+  const activation_token = emailService.createActivationToken(user);
 
-  if (!userDB) throw "User not found";
+  const url = `${process.env.CLIENT_URL}/user/activate/${activation_token}`;
+
+  emailService.sendEmail(user.email, url, "Vérifiez votre adresse email");
+
+  const newUser = await UserModel.create({
+    pseudo,
+    name,
+    email,
+    phoneNumber,
+    adress,
+    zipcode,
+    ville,
+    password,
+  });
+  res.status(201).json({
+    msg: "Votre compte a été enregistrer ! Veuillez activé votre adresse mail s'il vous plaît pour commencer.",
+  });
+
+  //   const userDB = await getByEmail(user.email);
+
+  //   if (!userDB) throw "User not found";
 
   return await UserDAO.signUp(user);
 };
