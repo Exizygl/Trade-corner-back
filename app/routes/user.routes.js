@@ -47,6 +47,18 @@ router.get("/", userController.getAllUsers);
 router.get("/:id", userController.userInfo);
 // Router put
 
-router.post("updateUser/:id", userController.userInfoUpdate)
+router.put("updateUser/:id", async (req, res) => {
+  try {
+    const user = await UserService.signUp(req.body);
+
+    user.password = "***";
+    return successCbk(res, 200, { user });
+  } catch (error) {
+    // const errors = signUpErrors(error)
+    return res.status(400).send({ error });
+  }
+});
+
+userController.userInfoUpdate
 
 module.exports = router;
