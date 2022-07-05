@@ -75,8 +75,10 @@ const logout = async (req, res) => {
     return res.status(500).json({ msg: err.message });
   }
 };
+
 module.exports = {
   signUp,
   signIn,
   getByEmail,
+  logout,
 };
