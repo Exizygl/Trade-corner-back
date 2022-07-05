@@ -5,7 +5,7 @@ const errorCbk = require("../misc/callbacks").errorCbk;
 const userCtrl = require("../controllers/Auth/auth.controller");
 const userController = require("../controllers/Auth/user.controller");
 const { signUpErrors, signInErrors } = require("../utils/errors");
-
+const { hasJWT } = require("../middlewares/jwt");
 // Router POST
 
 // router.post("/register", userCtrl.register);
@@ -42,10 +42,11 @@ router.post("/login", async (req, res) => {
 });
 
 
-router.post("update/:id", async (req, res) => {
+router.post("/update", hasJWT, async (req, res) => {
   try {
-    console.log('I m everywhere');
-    const user = await userController.userInfoUpdate(req.body);
+    
+    
+    const user = await UserService.userInfoUpdate(req.body, req.userId);
     return successCbk(res, 200, { user });
   } catch (error) {
     // const errors = signUpErrors(error)
