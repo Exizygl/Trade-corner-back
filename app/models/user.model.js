@@ -53,6 +53,10 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    isValid: {
+      type: Boolean,
+      default: false,
+    },
     password: {
       type: String,
       required: true,

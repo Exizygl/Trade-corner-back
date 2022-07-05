@@ -1,36 +1,28 @@
 const UserDAO = require("../daos/userDAO");
 const jwt = require("jsonwebtoken");
 const emailService = require("./emailService");
-const UserModel = require("../models/user.model");
 
 const signUp = async (user) => {
-  //   if (!emailService.validateEmail(user.email)) throw "Email invalide";
 
-  const activation_token = emailService.createActivationToken(user);
+    const userExist = await getByEmail(user.email);
 
-  const url = `${process.env.CLIENT_URL}/user/activate/${activation_token}`;
+    if (userExist) throw "User already exist";
 
-  emailService.sendEmail(user.email, url, "Vérifiez votre adresse email");
+    if (user) emailService.sendEmail(user.email, 'REGISTRATION', user);
 
-  const newUser = await UserModel.create({
-    pseudo,
-    name,
-    email,
-    phoneNumber,
-    adress,
-    zipcode,
-    ville,
-    password,
-  });
-  res.status(201).json({
-    msg: "Votre compte a été enregistrer ! Veuillez activé votre adresse mail s'il vous plaît pour commencer.",
-  });
+    return await UserDAO.signUp(user);
+};
 
-  //   const userDB = await getByEmail(user.email);
+const confirmRegistration = async (emailCrypt) => {
 
-  //   if (!userDB) throw "User not found";
+    const emailDecrypt = emailService.decryptEmail(emailCrypt);
 
-  return await UserDAO.signUp(user);
+    const user = await getByEmail(emailDecrypt);
+
+    if (!user) throw "Confirm error - email doesn't belong to any user";
+
+    return await UserDAO.confirmRegistration(user)
+
 };
 
 const getByEmail = async (email) => await UserDAO.getByEmail(email);
@@ -38,35 +30,36 @@ const getByEmail = async (email) => await UserDAO.getByEmail(email);
 // ======= AUTHENTIFICATION ========= //
 
 const signIn = async (email, password, res) => {
-  const user = await getByEmail(email);
+    const user = await getByEmail(email);
 
-  if (!user) throw "Authentication error - wrong email";
-  // if (!user.isValid) throw "Please confirm your email to login - user is not valid";
+    if (!user) throw "Authentication error - wrong email";
+    if (!user.isValid) throw "Please confirm your email to login - user is not valid";
 
-  const isMatch = await user.comparePassword(password);
+    const isMatch = await user.comparePassword(password);
 
-  if (!isMatch) throw "Authentication error - wrong password";
+    if (!isMatch) throw "Authentication error - wrong password";
 
-  const payload = {
-    email: user.email,
-    pseudo: user.pseudo,
-    id: user._id,
-    role: user.role,
-  };
+    const payload = {
+        email: user.email,
+        pseudo: user.pseudo,
+        id: user._id,
+        role: user.role,
+    };
 
-  let token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: 1500,
-  });
-  res.cookie("jwt", token, { httpOnly: true });
+    let token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: 1500,
+    });
+    res.cookie("jwt", token, { httpOnly: true });
 
-  // Security : hide pwd
-  // user.password = "***";
+    // Security : hide pwd
+    // user.password = "***";
 
-  return { user, id_token: token };
+    return { user, id_token: token };
 };
 
 module.exports = {
-  signUp,
-  signIn,
-  getByEmail,
+    signUp,
+    signIn,
+    getByEmail,
+    confirmRegistration,
 };
