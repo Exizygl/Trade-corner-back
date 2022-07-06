@@ -26,6 +26,23 @@ router.post("/register", async (req, res) => {
   }
 });
 
+router.put('/confirm', async (req, res) => {
+
+  const { emailCrypt } = req.body
+
+  try {
+      const user = await UserService.confirmRegistration(emailCrypt);
+      user.password = "***";
+
+      return successCbk(res, 200, user);
+  } catch (error) {
+      return res.status(400).json({
+          success: false,
+          message: "Confirmation non autorisé"
+      });
+  }
+});
+
 router.post("/login", async (req, res) => {
   try {
     const user = await UserService.signIn(

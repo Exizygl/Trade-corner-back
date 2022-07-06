@@ -2,36 +2,25 @@ const UserDAO = require("../daos/userDAO");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const emailService = require("./emailService");
-const UserModel = require("../models/user.model");
 
 const signUp = async (user) => {
-  //   if (!emailService.validateEmail(user.email)) throw "Email invalide";
+  const userExist = await getByEmail(user.email);
 
-  const activation_token = emailService.createActivationToken(user);
+  if (userExist) throw "User already exist";
 
-  const url = `${process.env.CLIENT_URL}/user/activate/${activation_token}`;
-
-  emailService.sendEmail(user.email, url, "Vérifiez votre adresse email");
-
-  const newUser = await UserModel.create({
-    pseudo,
-    name,
-    email,
-    phoneNumber,
-    adress,
-    zipcode,
-    ville,
-    password,
-  });
-  res.status(201).json({
-    msg: "Votre compte a été enregistrer ! Veuillez activé votre adresse mail s'il vous plaît pour commencer.",
-  });
-
-  //   const userDB = await getByEmail(user.email);
-
-  //   if (!userDB) throw "User not found";
+  if (user) emailService.sendEmail(user.email, "REGISTRATION", user);
 
   return await UserDAO.signUp(user);
+};
+
+const confirmRegistration = async (emailCrypt) => {
+  const emailDecrypt = emailService.decryptEmail(emailCrypt);
+
+  const user = await getByEmail(emailDecrypt);
+
+  if (!user) throw "Confirm error - email doesn't belong to any user";
+
+  return await UserDAO.confirmRegistration(user);
 };
 
 const getByEmail = async (email) => await UserDAO.getByEmail(email);
@@ -44,7 +33,8 @@ const signIn = async (email, password, res) => {
   const user = await getByEmail(email);
 
   if (!user) throw "Authentication error - wrong email";
-  // if (!user.isValid) throw "Please confirm your email to login - user is not valid";
+  if (!user.isValid)
+    throw "Please confirm your email to login - user is not valid";
 
   const isMatch = await user.comparePassword(password);
 
@@ -130,4 +120,5 @@ module.exports = {
   getById,
   userInfoUpdate,
   logout,
+  confirmRegistration,
 };

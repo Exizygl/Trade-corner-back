@@ -1,73 +1,56 @@
-const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
-const { google } = require("googleapis");
-const { OAuth2 } = google.auth;
-const OAUTH_PLAYGROUND = "https://developers.google.com/oauthplayground";
+const Util = require('../utils/processing');
+const jwt = require('jsonwebtoken');
+const CryptoJS = require("crypto-js");
+const nodemailer = require('nodemailer');
 
-const {
-  MAILING_SERVICE_CLIENT_ID,
-  MAILING_SERVICE_CLIENT_SECRET,
-  MAILING_SERVICE_REFRESH_TOKEN,
-  SENDER_EMAIL_ADDRESS,
-} = process.env;
+const sendEmail = (email, key, user) => {
 
-const oauth2Client = new OAuth2(
-  MAILING_SERVICE_CLIENT_ID,
-  MAILING_SERVICE_CLIENT_SECRET,
-  MAILING_SERVICE_REFRESH_TOKEN,
+    if (Util.emptyString(email)) throw "Could not send mail: 'email' parameter is missing";
+    if (Util.emptyString(key)) throw "Could not send mail: 'key' parameter is missing";
 
-  OAUTH_PLAYGROUND
-);
+    const emailCrypt = CryptoJS.AES.encrypt(email, process.env.MAILING_SERVICE_CLIENT_SECRET).toString();
 
-const validateEmail = (email) => {
-  const re =
-    /^(([^<>()[]\.,;:\s@"]+(.[^<>()[]\.,;:\s@"]+)*)|(".+"))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
-  return re.test(email);
-};
 
-const createActivationToken = (payload) => {
-  return jwt.sign({ payload }, process.env.ACTIVATION_TOKEN_SECRET, {
-    expiresIn: "5m",
-  });
-};
 
-const sendEmail = (to, url, txt) => {
-  const smtpTransport = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: "incubateurnumerique@gmail.com",
-      pass: "mtrnkbwzpdvrmknz",
-    },
-  });
+    const mailTransporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: "incubateurnumerique@gmail.com",
+          pass: "mtrnkbwzpdvrmknz",
+        }
+    })
 
-  const mailOptions = {
-    from: SENDER_EMAIL_ADDRESS,
-    to: to,
-    subject: "E-commerce",
-    html: `
-          <div>
-              <h2>Bienvenue sur E-commerce SHOP</h2>
-              <p>Toutes nos félicitations! Vous êtes presque prêt à commencer à utiliser E-Commerce ✮ SHOP.
-              Cliquez simplement sur le bouton ci-dessous pour valider votre adresse e-mail.
-              </p>
-          
-          <a href=${url} style="background: crimson; text-decoration: none; color: white; padding: 10px 20px; margin: 10px 0; display: inline-block;">${txt}</a>
-  
-          <p>Si le bouton ne fonctionne pas pour une raison quelconque, vous pouvez également cliquer sur le lien ci-dessous :</p>
-  
-          <div>${url}</div>
-          </div>
-      `,
-  };
+    const mailOptions = {
+        from: process.env.SENDER_EMAIL_ADDRESS,
+        to: email,
+        subject: 'verify your email',
+        html: `<h2> ${user.pseudo}! Merci pour l'inscription sur le site e-commerce </h2>
+       <h4> Veuillez cliquer sur le lien ci dessous</h4>
+       <a href="http://localhost:3000/confirm-register/${emailCrypt}"> Activez votre compte </a>`
+    }
 
-  smtpTransport.sendEmail(mailOptions, (err, infor) => {
-    if (err) return err;
-    return infor;
-  });
-};
+    mailTransporter.sendMail(mailOptions, function (err, data) {
+        if (err) {
+            console.log('Error Occurs');
+            throw "Email no send"
+        } else {
+            console.log('Email sent successfully');
+        }
+    });
+}
+
+const decryptEmail = (emailCrypt) => {
+
+    const emailBytes = CryptoJS.AES.decrypt(emailCrypt, process.env.MAILING_SERVICE_CLIENT_SECRET);
+    return emailBytes.toString(CryptoJS.enc.Utf8);
+
+}
+
+
+
+
 
 module.exports = {
-  validateEmail,
-  createActivationToken,
-  sendEmail,
-};
+    sendEmail,
+    decryptEmail
+}

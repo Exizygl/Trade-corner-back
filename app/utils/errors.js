@@ -19,17 +19,16 @@ const signUpErrors = (err) => {
 }
 
 const signInErrors = (err) => {
-    console.log(err)
 
     let errors = { email: '', password: '', isValid: '' }
 
     if (err === 'Authentication error - wrong email')
         errors.email = "Email inconnu";
 
-    if (err === 'Authentication error - wrong password')
+    else if (err === 'Authentication error - wrong password')
         errors.password = "Le mot de passe ne correspond pas";
 
-        if (err === 'Please confirm your email to login - user is not valid')
+       else if (err === 'Please confirm your email to login - user is not valid')
         errors.isValid = "L'inscription n'est pas encore confirmé";
 
     return errors
