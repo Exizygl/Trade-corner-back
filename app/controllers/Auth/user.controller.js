@@ -15,4 +15,8 @@ module.exports.userInfo = (req, res) => {
     if (!err) res.send(docs);
     else console.log("ID unknown : " + err);
   }).select("-password");
+
 };
+
+
+
