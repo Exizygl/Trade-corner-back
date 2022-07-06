@@ -41,6 +41,8 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.get("/logout", async (req, res, next) => {});
+
 // Router GET
 
 router.get("/", userController.getAllUsers);
