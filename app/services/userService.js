@@ -103,7 +103,7 @@ const userInfoUpdate = async (userInfo, userId) => {
 
       const re =
         /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      if (!re.test(email)) throw "email pas valide";
+      if (!re.test(userInfo.valueChange)) throw "email pas valide";
     }
 
     return await UserDAO.userInfoUpdate(user);
