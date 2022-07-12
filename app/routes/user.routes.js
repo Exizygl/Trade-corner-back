@@ -1,11 +1,14 @@
 const router = require("express").Router();
 const UserService = require("../services/userService");
+
 const successCbk = require("../misc/callbacks").successCbk;
 const errorCbk = require("../misc/callbacks").errorCbk;
 const userCtrl = require("../controllers/Auth/auth.controller");
 const userController = require("../controllers/Auth/user.controller");
-const { signUpErrors, signInErrors } = require("../utils/errors");
+const { signUpErrors, signInErrors, updateErrors } = require("../utils/errors");
 const { hasJWT } = require("../middlewares/jwt");
+
+
 // Router POST
 
 // router.post("/register", userCtrl.register);
@@ -65,10 +68,23 @@ router.post("/update", hasJWT, async (req, res) => {
     const user = await UserService.userInfoUpdate(req.body, req.userId);
     return successCbk(res, 200, { user });
   } catch (error) {
+     const errors = updateErrors(error)
+    return res.status(400).send({ errors });
+  }
+});
+
+router.post("/delete", hasJWT, async (req, res) => {
+  try {
+    console.log("toya");
+    const user = await UserService.userSoftDelete(req.body, req.userId);
+    return successCbk(res, 200, { user });
+  } catch (error) {
     // const errors = signUpErrors(error)
     return res.status(400).send({ error });
   }
 });
+
+
 
 // Router GET
 

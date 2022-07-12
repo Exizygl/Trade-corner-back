@@ -63,6 +63,10 @@ const userSchema = new mongoose.Schema(
       max: 1024,
       minLength: 6,
     },
+    archive: {
+      type: Boolean,
+      default: false
+    }
   },
   {
     timestamps: true,

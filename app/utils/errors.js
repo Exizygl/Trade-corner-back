@@ -28,13 +28,36 @@ const signInErrors = (err) => {
     else if (err === 'Authentication error - wrong password')
         errors.password = "Le mot de passe ne correspond pas";
 
-       else if (err === 'Please confirm your email to login - user is not valid')
+    else if (err === 'Please confirm your email to login - user is not valid')
         errors.isValid = "L'inscription n'est pas encore confirmé";
+
+    return errors
+}
+
+const updateErrors = (err) => {
+
+    let errors = { passwordNotMatch: '', password: '', isValid: '' }
+
+    if (err === 'Update User error - Not the same password')
+        errors.passwordNotMatch = "Les mots de passes sont différents";
+
+    else if (err === 'Update User error - Error old password')
+        errors.password = "L'ancien mot de passe ne correspond pas";
+
+    else if (err === 'Update User error - Email already taken')
+        errors.email = "Email déjà prit";
+
+    else if (err === 'Update User error - Pseudo already taken')
+        errors.pseudo = "Pseudo déjà prit";
+
+    else if (err === 'Update User error - Zipcode too long')
+        errors.zipcode = "Code postal trop long";
 
     return errors
 }
 
 module.exports = {
     signUpErrors,
-    signInErrors
+    signInErrors,
+    updateErrors
 }
