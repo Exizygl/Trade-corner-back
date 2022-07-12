@@ -16,6 +16,7 @@ const { hasJWT } = require("../middlewares/jwt");
 
 router.post("/register", async (req, res) => {
   try {
+    console.log("ça passe");
     const user = await UserService.signUp(req.body);
 
     user.password = "***";
