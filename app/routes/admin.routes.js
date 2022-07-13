@@ -13,7 +13,7 @@ const { hasJWT } = require("../middlewares/jwt");
 
 router.put("/delete", async (req,res)=>{
     try {
-        const userToDelete = await adminService.deleteUser(req.body, req.userId);
+        const userToDelete = await adminService.deleteUser(req.body, req.userToDeleteId);
         return successCbk(res, 200, { userToDelete });
          } catch (error) {
            return res.status(400).send({ error });

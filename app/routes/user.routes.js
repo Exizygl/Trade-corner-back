@@ -75,6 +75,6 @@ router.post("/update", hasJWT, async (req, res) => {
 
 router.get("/", userController.getAllUsers);
 router.get("/:id", userController.userInfo);
-// Router put
+
 
 module.exports = router;
