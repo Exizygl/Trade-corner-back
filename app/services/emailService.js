@@ -14,6 +14,8 @@ const sendEmail = (email, key, user) => {
 
     const mailTransporter = nodemailer.createTransport({
         service: 'gmail',
+        secure: false,
+        tls: {rejectUnauthorized : false},
         auth: {
           user: "incubateurnumerique@gmail.com",
           pass: "mtrnkbwzpdvrmknz",

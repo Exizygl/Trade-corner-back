@@ -1,6 +1,7 @@
 const UserDAO = require("../daos/userDAO");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const fs = require('fs')
 const emailService = require("./emailService");
 
 const signUp = async (user) => {
@@ -113,6 +114,25 @@ const userInfoUpdate = async (userInfo, userId) => {
   }
 };
 
+const uploadImageUser = async (filename, userId) => {
+
+  const user = await getById(userId)
+
+  if (filename && (user.imageProfilUrl != filename) && (user.imageProfilUrl != "")) {
+
+      // changing picture
+      const oldImagePath = `./public/${user.imageProfilUrl}`
+      fs.unlinkSync(oldImagePath)
+  }
+
+  const newUser = Object.assign(user,
+      {
+          imageProfilUrl: filename ? filename : user.imageProfilUrl
+      })
+
+  return await UserDAO.uploadImageUser(newUser)
+}
+
 module.exports = {
   signUp,
   signIn,
@@ -121,4 +141,5 @@ module.exports = {
   userInfoUpdate,
   logout,
   confirmRegistration,
+  uploadImageUser,
 };

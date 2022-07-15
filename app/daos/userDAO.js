@@ -13,6 +13,9 @@ const userInfoUpdate = async (user) =>
     new: true,
   });
 
+  const uploadImageUser = async (user) => await UserModel.findOneAndUpdate({ _id: ObjectId(user._id) }, user, { new: true })
+
+
 const confirmRegistration = async (user) =>
   await UserModel.findOneAndUpdate(
     { _id: user._id },
@@ -26,4 +29,5 @@ module.exports = {
   getById,
   userInfoUpdate,
   confirmRegistration,
+  uploadImageUser
 };
