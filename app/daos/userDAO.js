@@ -6,6 +6,9 @@ const signUp = async (user) => await new UserModel(user).save();
 const getByEmail = async (email) =>
   await UserModel.findOne({ email: new RegExp("^" + email + "$", "i") });
 
+const getByPseudo = async (pseudo) =>
+  await UserModel.findOne({ pseudo: new RegExp("^" + pseudo + "$", "i") });
+
 const getById = async (id) => await UserModel.findOne({ _id: id });
 
 const userInfoUpdate = async (user) =>
@@ -26,6 +29,7 @@ const confirmRegistration = async (user) =>
 module.exports = {
   signUp,
   getByEmail,
+  getByPseudo,
   getById,
   userInfoUpdate,
   confirmRegistration,
