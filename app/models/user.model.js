@@ -30,10 +30,9 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0, // 0 = user, 1 = admin
     },
-    Avatar: {
+    imageProfilUrl: {
       type: String,
-      default:
-        "https://res.cloudinary.com/devatchannel/image/upload/v1602752402/avatar/avatar_cugq40.png",
+      default: ""
     },
     phoneNumber: {
       type: String,
@@ -63,6 +62,10 @@ const userSchema = new mongoose.Schema(
       max: 1024,
       minLength: 6,
     },
+    archive: {
+      type: Boolean,
+      default: false
+    }
   },
   {
     timestamps: true,
