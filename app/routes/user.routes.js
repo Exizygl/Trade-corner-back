@@ -6,6 +6,7 @@ const userCtrl = require("../controllers/Auth/auth.controller");
 const userController = require("../controllers/Auth/user.controller");
 const { signUpErrors, signInErrors } = require("../utils/errors");
 const { hasJWT } = require("../middlewares/jwt");
+const upload = require('../middlewares/upload');
 // Router POST
 
 // router.post("/register", userCtrl.register);
@@ -67,6 +68,18 @@ router.post("/update", hasJWT, async (req, res) => {
   } catch (error) {
     // const errors = signUpErrors(error)
     return res.status(400).send({ error });
+  }
+});
+
+router.post('/upload-image', hasJWT, upload, async (req, res) => {
+
+  try {
+    const user = await UserService.uploadImageUser(req.file ? req.file.filename : "" , req.userId);
+          user.password = "***";
+
+      return successCbk(res, 200, { user });
+  } catch (error) {
+      return errorCbk(res, 405, error);
   }
 });
 

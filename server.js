@@ -5,7 +5,7 @@ const userRoutes = require("./app/routes/user.routes");
 const cors = require("cors");
 const { hasJWT } = require('./app/middlewares/jwt');
 const cookieParser = require("cookie-parser");
-const fileUpload = require("express-fileupload");
+// const fileUpload = require("express-fileupload");
 require("./app/config/server.config");
 
 const PORT = serverConfig.PORT || 5000;
@@ -26,11 +26,12 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
-app.use(
-  fileUpload({
-    useTempFiles: true,
-  })
-);
+// app.use(
+//   fileUpload({
+//     useTempFiles: true,
+//   })
+// );
+app.use('/static', express.static(__dirname + '/public'));
 
 //Routes
 
