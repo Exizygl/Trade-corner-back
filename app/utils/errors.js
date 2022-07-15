@@ -56,8 +56,19 @@ const updateErrors = (err) => {
     return errors
 }
 
+const userSoftDeleteErrors = (err) => {
+
+    let errors = { passwordNotMatch: '', password: '', isValid: '' }
+
+    if (err === 'Delete User error - Mot de passe incorrect')
+        errors.passwordNotMatch = "Mot de passe incorrect";
+
+    return errors
+}
+
 module.exports = {
     signUpErrors,
     signInErrors,
-    updateErrors
+    updateErrors,
+    userSoftDeleteErrors
 }

@@ -86,8 +86,9 @@ const userInfoUpdate = async (userInfo, userId) => {
     if (userInfo.valueName == "ville") {
       user['adress'] = userInfo.adress;
       user['zipcode'] = userInfo.zipcode;
-
-      if (user['zipcode'].lenght > 5)
+      
+      console.log(userInfo.zipcode.toString().length)
+      if (userInfo.zipcode.toString().length > 5)
         throw "Update User error - Zipcode too long"
       
     }
@@ -123,21 +124,15 @@ const userInfoUpdate = async (userInfo, userId) => {
       if (userCheck) throw "Update User error - Pseudo already taken";
       }
 
-      console.log(user);
+      
       return await UserDAO.userInfoUpdate(user);
     
   };
 
   const userSoftDelete = async (userInfo, userId) => {
-    try {
+   
 
       const user = {};
-
-
-
-
-      if (!userInfo.password)
-        return res.status(400).json({ msg: "Veuillez remplir tous les champs." });
 
 
 
@@ -145,7 +140,7 @@ const userInfoUpdate = async (userInfo, userId) => {
       userCheck = await getById(userId);
 
       const isMatch = await userCheck.comparePassword(userInfo.password);
-      if (!isMatch) throw "Mot de passe incorrect";
+      if (!isMatch) throw "Delete User error - Mot de passe incorrect";
 
       var chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
       var string = '';
@@ -169,10 +164,7 @@ const userInfoUpdate = async (userInfo, userId) => {
 
       return await UserDAO.userInfoUpdate(user);
 
-    } catch (err) {
-      console.log(err);
-      return res.status(500).json({ msg: err.message });
-    }
+   
   };
   module.exports = {
     signUp,
