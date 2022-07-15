@@ -83,6 +83,7 @@ const userInfoUpdate = async (userInfo, userId) => {
     user[userInfo.valueName] = userInfo.valueChange;
 
 
+    //Gestion des variables de changement d'adresse
     if (userInfo.valueName == "ville") {
       user['adress'] = userInfo.adress;
       user['zipcode'] = userInfo.zipcode;
@@ -93,6 +94,7 @@ const userInfoUpdate = async (userInfo, userId) => {
       
     }
 
+    //Vérification des mot de passes
     if (userInfo.valueName == "password") {
       if (!userInfo.oldPassword || !userInfo.repeatNewPassword)
         throw "Update User error - Empty field"
@@ -114,13 +116,15 @@ const userInfoUpdate = async (userInfo, userId) => {
 
 
 
+      //Vérification email
       const re =
         /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       if (!re.test(userInfo.valueChange)) throw "email pas valide";
     }
 
+    //Vérification pseudo
       if (userInfo.valueName == "pseudo") {
-      const userCheck = await getByEmail(userInfo.valueChange);
+      const userCheck = await getByPseudo(userInfo.valueChange);
       if (userCheck) throw "Update User error - Pseudo already taken";
       }
 
@@ -129,19 +133,20 @@ const userInfoUpdate = async (userInfo, userId) => {
     
   };
 
+
   const userSoftDelete = async (userInfo, userId) => {
    
 
       const user = {};
+      
+      userCheck = await getById(userId);//Get User
 
 
-
-
-      userCheck = await getById(userId);
-
+      //Vérification Mot de passe
       const isMatch = await userCheck.comparePassword(userInfo.password);
       if (!isMatch) throw "Delete User error - Mot de passe incorrect";
 
+      //Création d'une random string pour remplir la BDD
       var chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
       var string = '';
       for (var ii = 0; ii < 15; ii++) {
@@ -170,6 +175,7 @@ const userInfoUpdate = async (userInfo, userId) => {
     signUp,
     signIn,
     getByEmail,
+    getByPseudo,
     getById,
     userInfoUpdate,
     logout,
