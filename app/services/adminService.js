@@ -23,7 +23,7 @@ const deleteUser = async (req,res,next) => {
         .catch ((error) => {
             console.log("une erreur est survenue : " + error);
             // throw error;
-            // return res.status(500).json({ msg: error });
+            return res.status(500).json({ msg: error });
         })
     } catch (err) {
     console.log(err);
