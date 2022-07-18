@@ -2,12 +2,17 @@ const UserModel = require("../models/user.model");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 //generateur d'email random
-function getRandomEmail (domain, length) {
+function getRandomString (length) {
   var chars = 'abcdefghijklmnopqrstuvwxyz1234567890';
   var string = '';
   for(var i=0; i<length; i++){
       string += chars[Math.floor(Math.random() * chars.length)];
   }
+  return string
+
+}
+function getRandomEmail (domain, string) {
+  
   return string + domain
 }
 
@@ -15,22 +20,23 @@ const getById = async (id) => await UserModel.findOne({ _id: id });
 
 const deleteUser = async (userId) => {
 
-var email = getRandomEmail("@delete.com", 14);
+var name = getRandomString(14);
+var email = getRandomEmail("@delete.com", name);
   await UserModel.updateOne({ _id: ObjectId(userId) }, {Avatar: "supprimé", 
-                                                        pseudo:"supprimé", 
-                                                        name: "supprimé", 
+                                                        pseudo:name, 
+                                                        name: name, 
                                                         phoneNumber:"supprimé", 
                                                         adress:"supprimé", 
                                                         zipcode:"supprimé", 
                                                         ville:"supprimé", 
                                                         password:"supprimé",
                                                         email: email,
+                                                        archive: true,
   });
 }
 
-  module.exports = {
-    getById,
-    deleteUser
-    
-  };
+module.exports = {
+  getById,
+  deleteUser   
+};
   

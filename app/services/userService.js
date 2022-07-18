@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const fs = require('fs')
 const emailService = require("./emailService");
 
+// ======= INSCRIPTION ========= //
+
 const signUp = async (user) => {
   const userExist = await getByEmail(user.email);
 
@@ -23,6 +25,8 @@ const confirmRegistration = async (emailCrypt) => {
 
   return await UserDAO.confirmRegistration(user);
 };
+
+// ======= RECHERCHE ========= //
 
 const getByEmail = async (email) => await UserDAO.getByEmail(email);
 
@@ -72,6 +76,8 @@ const logout = async (req, res) => {
   }
 };
 
+// ======= MODIFICATIONS ========= //
+
 const userInfoUpdate = async (userInfo, userId) => {
     const user = {};
     user[userInfo.valueName] = userInfo.valueChange;
@@ -90,7 +96,6 @@ const userInfoUpdate = async (userInfo, userId) => {
       console.log(userInfo.zipcode.toString().length)
       if (userInfo.zipcode.toString().length > 5)
         throw "Update User error - Zipcode too long"
-      
     }
 
     //Vérification des mot de passes
@@ -113,8 +118,6 @@ const userInfoUpdate = async (userInfo, userId) => {
       const userCheck = await getByEmail(userInfo.valueChange);
       if (userCheck) throw "Update User error - Email already taken";
 
-
-
       //Vérification email
       const re =
         /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -128,10 +131,10 @@ const userInfoUpdate = async (userInfo, userId) => {
       }
 
       return await UserDAO.userInfoUpdate(user);
-    }
+  }
 
       
-    const uploadImageUser = async (filename, userId) => {
+const uploadImageUser = async (filename, userId) => {
 
       const user = await getById(userId)
     
@@ -148,12 +151,11 @@ const userInfoUpdate = async (userInfo, userId) => {
           })
     
       return await UserDAO.uploadImageUser(newUser)
-    }
+  }
 
 
-  const userSoftDelete = async (userInfo, userId) => {
+const userSoftDelete = async (userInfo, userId) => {
    
-
       const user = {};
       
       userCheck = await getById(userId);//Get User
@@ -182,13 +184,10 @@ const userInfoUpdate = async (userInfo, userId) => {
       user['isValid'] = false;
       user['archive'] = true;
 
-
-
-      return await UserDAO.userInfoUpdate(user);
-
-   
+      return await UserDAO.userInfoUpdate(user);  
   };
-  module.exports = {
+  
+module.exports = {
     signUp,
     signIn,
     getByEmail,
