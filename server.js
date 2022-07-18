@@ -2,7 +2,7 @@ const express = require("express");
 const serverConfig = require("./app/config/server.config");
 const bodyParser = require("body-parser");
 const userRoutes = require("./app/routes/user.routes");
-
+const adminRoutes = require("./app/routes/admin.routes");
 const cors = require("cors");
 const { hasJWT } = require('./app/middlewares/jwt');
 const cookieParser = require("cookie-parser");
@@ -37,6 +37,7 @@ app.use('/static', express.static(__dirname + '/public'));
 //Routes
 
 app.use("/api/user", userRoutes);
+app.use("/api/admin", adminRoutes);
 
 
 app.get("/api", (req, res) => res.status(200).send({ message: "test server" }));

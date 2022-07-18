@@ -5,6 +5,8 @@ const nodemailer = require('nodemailer');
 
 const sendEmail = (email, key, user) => {
 
+    console.log("truc");
+
     if (Util.emptyString(email)) throw "Could not send mail: 'email' parameter is missing";
     if (Util.emptyString(key)) throw "Could not send mail: 'key' parameter is missing";
 
@@ -34,6 +36,7 @@ const sendEmail = (email, key, user) => {
     mailTransporter.sendMail(mailOptions, function (err, data) {
         if (err) {
             console.log('Error Occurs');
+            console.log(err);
             throw "Email no send"
         } else {
             console.log('Email sent successfully');

@@ -18,6 +18,7 @@ const upload = require('../middlewares/upload');
 
 router.post("/register", async (req, res) => {
   try {
+    console.log("ça passe");
     const user = await UserService.signUp(req.body);
 
     user.password = "***";
@@ -102,6 +103,6 @@ router.post("/delete", hasJWT, async (req, res) => {
 
 router.get("/", userController.getAllUsers);
 router.get("/:id", userController.userInfo);
-// Router put
+
 
 module.exports = router;
