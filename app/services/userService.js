@@ -11,7 +11,7 @@ const signUp = async (user) => {
 
   if (userExist) throw "User already exist";
 
-  if (user) emailService.sendEmail(user.email, "REGISTRATION", user);
+  if (user) emailService.sendEmailForConfirmation(user.email, "REGISTRATION", user);
 
   return await UserDAO.signUp(user);
 };
