@@ -5,13 +5,10 @@ const nodemailer = require('nodemailer');
 
 const sendEmail = (email, key, user) => {
 
-    console.log("truc");
-
     if (Util.emptyString(email)) throw "Could not send mail: 'email' parameter is missing";
     if (Util.emptyString(key)) throw "Could not send mail: 'key' parameter is missing";
 
     const emailCrypt = CryptoJS.AES.encrypt(email, process.env.MAILING_SERVICE_CLIENT_SECRET).toString();
-
 
 
     const mailTransporter = nodemailer.createTransport({

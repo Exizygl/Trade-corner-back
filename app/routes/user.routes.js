@@ -8,6 +8,9 @@ const userController = require("../controllers/Auth/user.controller");
 const { signUpErrors, signInErrors, updateErrors, userSoftDeleteErrors } = require("../utils/errors");
 const { hasJWT } = require("../middlewares/jwt");
 const upload = require('../middlewares/upload');
+
+
+
 // Router POST
 
 // router.post("/register", userCtrl.register);
@@ -96,7 +99,6 @@ router.post("/delete", hasJWT, async (req, res) => {
     return res.status(200).send({ errors });
   }
 });
-
 
 
 // Router GET
