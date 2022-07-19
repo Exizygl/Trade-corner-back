@@ -21,9 +21,7 @@ const upload = require('../middlewares/upload');
 
 router.post("/register", async (req, res) => {
   try {
-    console.log("ça passe");
     const user = await UserService.signUp(req.body);
-
     user.password = "***";
     return successCbk(res, 200, { user });
   } catch (error) {

@@ -1,6 +1,7 @@
 const adminDAO = require("../daos/adminDAO");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const emailService = require("./emailService");
 
 
 
@@ -16,6 +17,9 @@ const deleteUser = async (req,res,next) => {
         throw "Authentication error - wrong password"
     }
     else {
+        const userToDelete = await adminDAO.getById(req.userToDeleteId);
+        console.log("user to delete : " + userToDelete);
+        emailService.sendEmailAfterDeleteAdmin(userToDelete.email, "DELETE", userToDelete);
         return await adminDAO.deleteUser(req.userToDeleteId);
     }   
 };
