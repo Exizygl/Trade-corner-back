@@ -126,6 +126,7 @@ const userInfoUpdate = async (userInfo, userId) => {
 
     //Vérification pseudo
       if (userInfo.valueName == "pseudo") {
+        console.log("version bastien = "+ JSON.stringify(user))
       const userCheck = await getByPseudo(userInfo.valueChange);
       if (userCheck) throw "Update User error - Pseudo already taken";
       }
