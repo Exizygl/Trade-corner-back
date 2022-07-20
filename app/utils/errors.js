@@ -52,6 +52,9 @@ const updateErrors = (err) => {
 
     else if (err === 'Update User error - Zipcode too long')
         errors.zipcode = "Code postal trop long";
+    
+    else if (err === 'Update User error - City has number')
+        errors.city = "La ville ne peut pas contenir de chiffre";
 
     return errors
 }
@@ -66,9 +69,20 @@ const userSoftDeleteErrors = (err) => {
     return errors
 }
 
+const ForgottenPasswordErrors = (err) => {
+
+    let errors = { email: '' }
+
+    if (err === 'Authentication error - wrong email')
+        errors.email = "Email inconnu";
+
+    return errors
+}
+
 module.exports = {
     signUpErrors,
     signInErrors,
     updateErrors,
-    userSoftDeleteErrors
+    userSoftDeleteErrors,
+    ForgottenPasswordErrors
 }

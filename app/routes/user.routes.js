@@ -5,10 +5,12 @@ const successCbk = require("../misc/callbacks").successCbk;
 const errorCbk = require("../misc/callbacks").errorCbk;
 const userCtrl = require("../controllers/Auth/auth.controller");
 const userController = require("../controllers/Auth/user.controller");
-const { signUpErrors, signInErrors, updateErrors, userSoftDeleteErrors } = require("../utils/errors");
+const { signUpErrors, signInErrors, updateErrors, userSoftDeleteErrors, ForgottenPasswordErrors } = require("../utils/errors");
 const { hasJWT } = require("../middlewares/jwt");
 const upload = require('../middlewares/upload');
 // Router POST
+
+
 
 // router.post("/register", userCtrl.register);
 // router.post("/activation", userCtrl.activateEmail);
@@ -93,6 +95,29 @@ router.post("/delete", hasJWT, async (req, res) => {
     return successCbk(res, 200, { user });
   } catch (error) {
     const errors = userSoftDeleteErrors(error)
+    return res.status(200).send({ errors });
+  }
+});
+
+router.post("/forgotten-password",async (req, res) => {
+  try {
+    console.log('toyo');
+    const user = await UserService.userForgottenPassword(req.body);
+    return successCbk(res, 200, { user });
+  } catch (error) {
+    const errors = ForgottenPasswordErrors(error)
+    return res.status(200).send({ errors });
+  }
+});
+
+
+router.post("/password-change",async (req, res) => {
+  try {
+    
+    const user = await UserService.userPasswordChange(req.body);
+    return successCbk(res, 200, { user });
+  } catch (error) {
+    const errors = ForgottenPasswordErrors(error)
     return res.status(200).send({ errors });
   }
 });

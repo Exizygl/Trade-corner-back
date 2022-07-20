@@ -11,7 +11,7 @@ const signUp = async (user) => {
 
   if (userExist) throw "User already exist";
 
-  if (user) emailService.sendEmail(user.email, "REGISTRATION", user);
+  if (user) emailService.sendEmailForConfirmation(user.email, "REGISTRATION", user);
 
   return await UserDAO.signUp(user);
 };
@@ -96,8 +96,14 @@ const userInfoUpdate = async (userInfo, userId) => {
       console.log(userInfo.zipcode.toString().length)
       if (userInfo.zipcode.toString().length > 5)
         throw "Update User error - Zipcode too long"
-    }
 
+ 
+       
+      if (/\d/.test(userInfo.valueChange)){
+
+      throw "Update User error - City has number"
+      }
+    }
     //Vérification des mot de passes
     if (userInfo.valueName == "password") {
       if (!userInfo.oldPassword || !userInfo.repeatNewPassword)
@@ -186,6 +192,43 @@ const userSoftDelete = async (userInfo, userId) => {
 
       return await UserDAO.userInfoUpdate(user);  
   };
+
+  const userForgottenPassword= async (userInfo) => {
+   
+      
+      
+      const user = await getByEmail(userInfo.email);//Get User
+
+      if (!user) throw "Authentication error - wrong email";
+
+      
+
+      if (user) emailService.sendEmailForPasswordRecovery(user.email, "FORGOTTENPASSWORD", user);
+
+
+
+      return await UserDAO.userInfoUpdate(user);  
+  };
+  
+  const userPasswordChange= async (userInfo) => {
+   
+      console.log("here");
+      console.log(userInfo);
+      const emailDecrypt = emailService.decryptEmail(userInfo.emailCrypt);
+      console.log("there");
+      const user = await getByEmail(emailDecrypt);
+
+      if (!user) throw "Authentication error - wrong email";
+
+      if (userInfo.password != userInfo.passwordRepeat)
+      throw "Update User error - Not the same password";
+
+      const salt = await bcrypt.genSalt();
+      user[password] = await bcrypt.hash(userInfo.password, salt);
+      
+
+      return await UserDAO.userInfoUpdate(user);  
+  };
   
 module.exports = {
     signUp,
@@ -197,5 +240,7 @@ module.exports = {
     logout,
     confirmRegistration,
     userSoftDelete,
-    uploadImageUser
+    uploadImageUser,
+    userForgottenPassword,
+    userPasswordChange
   };
