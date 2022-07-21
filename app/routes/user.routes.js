@@ -5,7 +5,7 @@ const successCbk = require("../misc/callbacks").successCbk;
 const errorCbk = require("../misc/callbacks").errorCbk;
 const userCtrl = require("../controllers/Auth/auth.controller");
 const userController = require("../controllers/Auth/user.controller");
-const { signUpErrors, signInErrors, updateErrors, userSoftDeleteErrors, ForgottenPasswordErrors } = require("../utils/errors");
+const { signUpErrors, signInErrors, updateErrors, userSoftDeleteErrors, ForgottenPasswordErrors, passwordChangeErrors } = require("../utils/errors");
 const { hasJWT } = require("../middlewares/jwt");
 const upload = require('../middlewares/upload');
 // Router POST
@@ -117,7 +117,7 @@ router.post("/password-change",async (req, res) => {
     const user = await UserService.userPasswordChange(req.body);
     return successCbk(res, 200, { user });
   } catch (error) {
-    const errors = ForgottenPasswordErrors(error)
+    const errors = passwordChangeErrors(error)
     return res.status(200).send({ errors });
   }
 });

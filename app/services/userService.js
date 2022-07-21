@@ -212,19 +212,24 @@ const userSoftDelete = async (userInfo, userId) => {
   
   const userPasswordChange= async (userInfo) => {
    
-      console.log("here");
-      console.log(userInfo);
-      const emailDecrypt = emailService.decryptEmail(userInfo.emailCrypt);
-      console.log("there");
+     
+      const emailDecrypt = emailService.decryptEmail(userInfo.email);
+   
       const user = await getByEmail(emailDecrypt);
-
-      if (!user) throw "Authentication error - wrong email";
-
+    
+      if (!user) throw "Password Change error - wrong email";
+     
       if (userInfo.password != userInfo.passwordRepeat)
-      throw "Update User error - Not the same password";
-
+      throw "Password Change error - Not the same password";
+      
+      if (userInfo.password.toString().length < 6)
+      throw "Password Change error - Password too short";
+      
       const salt = await bcrypt.genSalt();
-      user[password] = await bcrypt.hash(userInfo.password, salt);
+      
+      user.password = await bcrypt.hash(userInfo.password, salt);
+
+     
       
 
       return await UserDAO.userInfoUpdate(user);  
