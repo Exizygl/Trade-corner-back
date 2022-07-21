@@ -8,6 +8,9 @@ const userController = require("../controllers/Auth/user.controller");
 const { signUpErrors, signInErrors, updateErrors, userSoftDeleteErrors } = require("../utils/errors");
 const { hasJWT } = require("../middlewares/jwt");
 const upload = require('../middlewares/upload');
+
+
+
 // Router POST
 
 // router.post("/register", userCtrl.register);
@@ -18,9 +21,7 @@ const upload = require('../middlewares/upload');
 
 router.post("/register", async (req, res) => {
   try {
-    console.log("ça passe");
     const user = await UserService.signUp(req.body);
-
     user.password = "***";
     return successCbk(res, 200, { user });
   } catch (error) {
@@ -96,7 +97,6 @@ router.post("/delete", hasJWT, async (req, res) => {
     return res.status(200).send({ errors });
   }
 });
-
 
 
 // Router GET

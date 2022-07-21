@@ -11,7 +11,7 @@ const signUp = async (user) => {
 
   if (userExist) throw "User already exist";
 
-  if (user) emailService.sendEmail(user.email, "REGISTRATION", user);
+  if (user) emailService.sendEmailForConfirmation(user.email, "REGISTRATION", user);
 
   return await UserDAO.signUp(user);
 };
@@ -126,6 +126,7 @@ const userInfoUpdate = async (userInfo, userId) => {
 
     //Vérification pseudo
       if (userInfo.valueName == "pseudo") {
+        console.log("version bastien = "+ JSON.stringify(user))
       const userCheck = await getByPseudo(userInfo.valueChange);
       if (userCheck) throw "Update User error - Pseudo already taken";
       }
