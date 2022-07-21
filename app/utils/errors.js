@@ -41,6 +41,9 @@ const updateErrors = (err) => {
     if (err === 'Update User error - Not the same password')
         errors.passwordNotMatch = "Les mots de passes sont différents";
 
+    else if (err === 'Update User error - Password too short')
+        errors.passwordLenght = "Le mot de passe est trop cour";
+
     else if (err === 'Update User error - Error old password')
         errors.password = "L'ancien mot de passe ne correspond pas";
 

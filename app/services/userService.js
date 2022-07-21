@@ -112,6 +112,9 @@ const userInfoUpdate = async (userInfo, userId) => {
       if (userInfo.valueChange != userInfo.repeatNewPassword)
         throw "Update User error - Not the same password";
 
+        if (userInfo.password.toString().length < 6)
+        throw "Update User error - Password too short";
+
       userCheck = await getById(userId);
 
       const isMatch = await userCheck.comparePassword(userInfo.oldPassword);
