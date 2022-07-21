@@ -96,8 +96,14 @@ const userInfoUpdate = async (userInfo, userId) => {
       console.log(userInfo.zipcode.toString().length)
       if (userInfo.zipcode.toString().length > 5)
         throw "Update User error - Zipcode too long"
-    }
 
+ 
+       
+      if (/\d/.test(userInfo.valueChange)){
+
+      throw "Update User error - City has number"
+      }
+    }
     //Vérification des mot de passes
     if (userInfo.valueName == "password") {
       if (!userInfo.oldPassword || !userInfo.repeatNewPassword)
@@ -105,6 +111,9 @@ const userInfoUpdate = async (userInfo, userId) => {
 
       if (userInfo.valueChange != userInfo.repeatNewPassword)
         throw "Update User error - Not the same password";
+
+        if (userInfo.password.toString().length < 6)
+        throw "Update User error - Password too short";
 
       userCheck = await getById(userId);
 
@@ -187,6 +196,48 @@ const userSoftDelete = async (userInfo, userId) => {
 
       return await UserDAO.userInfoUpdate(user);  
   };
+
+  const userForgottenPassword= async (userInfo) => {
+   
+      
+      
+      const user = await getByEmail(userInfo.email);//Get User
+
+      if (!user) throw "Authentication error - wrong email";
+
+      
+
+      if (user) emailService.sendEmailForPasswordRecovery(user.email, "FORGOTTENPASSWORD", user);
+
+
+
+      return await UserDAO.userInfoUpdate(user);  
+  };
+  
+  const userPasswordChange= async (userInfo) => {
+   
+     
+      const emailDecrypt = emailService.decryptEmail(userInfo.email);
+   
+      const user = await getByEmail(emailDecrypt);
+    
+      if (!user) throw "Password Change error - wrong email";
+     
+      if (userInfo.password != userInfo.passwordRepeat)
+      throw "Password Change error - Not the same password";
+      
+      if (userInfo.password.toString().length < 6)
+      throw "Password Change error - Password too short";
+      
+      const salt = await bcrypt.genSalt();
+      
+      user.password = await bcrypt.hash(userInfo.password, salt);
+
+     
+      
+
+      return await UserDAO.userInfoUpdate(user);  
+  };
   
 module.exports = {
     signUp,
@@ -198,5 +249,7 @@ module.exports = {
     logout,
     confirmRegistration,
     userSoftDelete,
-    uploadImageUser
+    uploadImageUser,
+    userForgottenPassword,
+    userPasswordChange
   };
