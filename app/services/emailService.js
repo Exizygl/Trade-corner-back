@@ -107,8 +107,6 @@ const decryptEmail = (emailCrypt) => {
 
 
 
-
-
 module.exports = {
     sendEmail,
     sendEmailForConfirmation,

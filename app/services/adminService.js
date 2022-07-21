@@ -2,6 +2,7 @@ const adminDAO = require("../daos/adminDAO");
 const userDAO = require ("../daos/userDAO");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const fs = require('fs');
 const emailService = require("./emailService");
 
 const getByEmail = async (email) => await userDAO.getByEmail(email);
@@ -29,7 +30,6 @@ const deleteUser = async (req,res,next) => {
 };
 
 const updateUser = async (req, res, next) => {
-  console.log("req.body"+ req.userToUpdate);
   const admin = await adminDAO.getById(req.userId);
     if (!admin) {
         throw "probléme d'identification - administrateur non reconnu"
@@ -83,8 +83,33 @@ const updateUser = async (req, res, next) => {
       return await adminDAO.updateUser(userToUpdate);
 }
 
+const uploadImageUser = async (filename, req) => {
+  console.log("filename : "+filename+"userId :  "+req.userId+" usertoupdate : "+req.userToUpdate);
+  const admin = await adminDAO.getById(userId);
+    if (!admin) {
+        throw "probléme d'identification - administrateur non reconnu"
+    }
+
+  const user = await adminDAO.getById(userToUpdate);
+  console.log("user to update : " + JSON.stringify(user));
+  if (filename && (user.imageProfilUrl != filename) && (user.imageProfilUrl != "")) {
+
+      // changing picture
+      const oldImagePath = `./public/${user.imageProfilUrl}`
+      fs.unlinkSync(oldImagePath)
+  }
+
+  const newUser = Object.assign(user,
+      {
+          imageProfilUrl: filename ? filename : user.imageProfilUrl
+      })
+
+  return await userDAO.uploadImageUser(newUser)
+}
+
 module.exports = {
    deleteUser,
    updateUser,
+   uploadImageUser,
   };
   
