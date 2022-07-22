@@ -32,7 +32,7 @@ const userSchema = new mongoose.Schema(
     },
     imageProfilUrl: {
       type: String,
-      default: ""
+      default: "",
     },
     phoneNumber: {
       type: String,
@@ -64,8 +64,14 @@ const userSchema = new mongoose.Schema(
     },
     archive: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
+    passwordConfirmation: {
+      type: String,
+      required: true,
+      max: 1024,
+      minLength: 6,
+    },
   },
   {
     timestamps: true,
@@ -77,14 +83,14 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
-// userSchema.pre("save", async function (next) {
-//   const salt = await bcrypt.genSalt();
-//   this.passwordConfirmation = await bcrypt.hash(
-//     this.passwordConfirmation,
-//     salt
-//   );
-//   next();
-// });
+userSchema.pre("save", async function (next) {
+  const salt = await bcrypt.genSalt();
+  this.passwordConfirmation = await bcrypt.hash(
+    this.passwordConfirmation,
+    salt
+  );
+  next();
+});
 
 // ======= Pour la connexion ========== //
 userSchema.methods.comparePassword = async function (candidatePassword, cb) {

@@ -36,10 +36,13 @@ const signInErrors = (err) => {
 
 const updateErrors = (err) => {
 
-    let errors = { passwordNotMatch: '', password: '', isValid: '' }
+    let errors = { passwordNotMatch: '', password: '', email: '' , pseudo:'', zipcode: '', city: '' }
 
     if (err === 'Update User error - Not the same password')
         errors.passwordNotMatch = "Les mots de passes sont différents";
+
+    else if (err === 'Update User error - Password too short')
+        errors.passwordLenght = "Le mot de passe est trop cour";
 
     else if (err === 'Update User error - Error old password')
         errors.password = "L'ancien mot de passe ne correspond pas";
@@ -52,16 +55,45 @@ const updateErrors = (err) => {
 
     else if (err === 'Update User error - Zipcode too long')
         errors.zipcode = "Code postal trop long";
+    
+    else if (err === 'Update User error - City has number')
+        errors.city = "La ville ne peut pas contenir de chiffre";
+
+    return errors
+}
+
+const passwordChangeErrors = (err) => {
+
+    let errors = { passwordNotMatch: '', password: '', email: '' }
+
+    if (err === 'Password Change error - wrong email')
+        errors.email = "L'email n'est pas bon";
+
+    else if (err === 'Password Change error - Not the same password')
+        errors.passwordNotMatch = "Les mots de passes sont différents";
+    
+    else if (err === 'Password Change error - Password too short')
+        errors.password = "Le mots de passe est trop cour";
 
     return errors
 }
 
 const userSoftDeleteErrors = (err) => {
 
-    let errors = { passwordNotMatch: '', password: '', isValid: '' }
+    let errors = { password: '' }
 
     if (err === 'Delete User error - Mot de passe incorrect')
         errors.passwordNotMatch = "Mot de passe incorrect";
+
+    return errors
+}
+
+const ForgottenPasswordErrors = (err) => {
+
+    let errors = { email: '' }
+
+    if (err === 'Authentication error - wrong email')
+        errors.email = "Email inconnu";
 
     return errors
 }
@@ -70,5 +102,7 @@ module.exports = {
     signUpErrors,
     signInErrors,
     updateErrors,
-    userSoftDeleteErrors
+    userSoftDeleteErrors,
+    ForgottenPasswordErrors,
+    passwordChangeErrors
 }
