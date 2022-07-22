@@ -83,15 +83,13 @@ const updateUser = async (req, res, next) => {
       return await adminDAO.updateUser(userToUpdate);
 }
 
-const uploadImageUser = async (filename, req) => {
-  console.log("filename : "+filename+"userId :  "+req.userId+" usertoupdate : "+req.userToUpdate);
+const uploadImageUser = async (filename, userId, userToUpdate,) => {
   const admin = await adminDAO.getById(userId);
     if (!admin) {
         throw "probléme d'identification - administrateur non reconnu"
     }
 
   const user = await adminDAO.getById(userToUpdate);
-  console.log("user to update : " + JSON.stringify(user));
   if (filename && (user.imageProfilUrl != filename) && (user.imageProfilUrl != "")) {
 
       // changing picture

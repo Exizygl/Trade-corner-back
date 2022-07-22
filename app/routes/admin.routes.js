@@ -31,10 +31,8 @@ router.put("/update", hasJWT, async (req, res) => {
 });
 
 router.post('/upload-image', hasJWT, upload, async (req, res) => {
-  console.log("req.body.userToUpdate = " + req.body.userToUpdate);
-
   try {
-    const userUpdated = await adminService.uploadImageUser(req.file ? req.file.filename : "" , req);
+    const userUpdated = await adminService.uploadImageUser(req.file ? req.file.filename : "" , req.userId, req.body.userToUpdate);
           userUpdated.password = "***";
       return successCbk(res, 200, { userUpdated });
   } catch (error) {
