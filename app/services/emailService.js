@@ -58,8 +58,8 @@ const sendEmailAfterDeleteAdmin = (email, key, user) => {
     process.env.MAILING_SERVICE_CLIENT_SECRET
   ).toString();
   const subject = "Supression de votre compte e-commerce";
-  const bodyMessage = `<h2> ${user.pseudo}Votre compte e-commerce a été supprimé</h2>
-    <h4> Un administrateur a supprimé votre compte e-commerce. Vos données personnelles ont été supprimées et votre compte cloturé.
+  const bodyMessage = `<h2> ${user.pseudo} ! Votre compte sur le site e-commerce a été supprimé</h2>
+    <h4> Un administrateur a supprimé votre compte sur le site e-commerce. Vos données personnelles ont été supprimées et votre compte cloturé.
     Si vous avez des questions, vous pouvez nous contacter via le formulaire de contact</h4>
     <a href=""> lien vers la page contact </a>`;
 
