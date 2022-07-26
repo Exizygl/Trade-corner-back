@@ -3,6 +3,7 @@ const serverConfig = require("./app/config/server.config");
 const bodyParser = require("body-parser");
 const userRoutes = require("./app/routes/user.routes");
 const adminRoutes = require("./app/routes/admin.routes");
+const productRoutes = require("./app/routes/product.routes");
 const cors = require("cors");
 const { hasJWT } = require('./app/middlewares/jwt');
 const cookieParser = require("cookie-parser");
@@ -38,7 +39,8 @@ app.use('/static', express.static(__dirname + '/public'));
 
 app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
-
+app.use("/api/product", productRoutes);
+ 
 
 app.get("/api", (req, res) => res.status(200).send({ message: "test server" }));
 
