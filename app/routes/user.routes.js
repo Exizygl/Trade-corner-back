@@ -66,24 +66,25 @@ router.post("/login", async (req, res) => {
   }
 });
 
-logout: async (req, res) => {
+router.get("/logout", async (req, res) => {
   try {
     res.clearCookie("refreshtoken", { path: "/user/refresh_token" });
     return res.json({ msg: "Logged out" });
   } catch (err) {
     return res.status(500).json({ msg: err.message });
   }
-},
-  router.post("/update", hasJWT, async (req, res) => {
-    try {
-      const user = await UserService.userInfoUpdate(req.body, req.userId);
-      return successCbk(res, 200, { user });
-    } catch (error) {
-      const errors = updateErrors(error);
+});
 
-      return res.status(200).send({ errors });
-    }
-  });
+router.post("/update", hasJWT, async (req, res) => {
+  try {
+    const user = await UserService.userInfoUpdate(req.body, req.userId);
+    return successCbk(res, 200, { user });
+  } catch (error) {
+    const errors = updateErrors(error);
+
+    return res.status(200).send({ errors });
+  }
+});
 
 router.post("/upload-image", hasJWT, upload, async (req, res) => {
   try {
