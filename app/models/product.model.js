@@ -11,8 +11,6 @@ const productSchema = new mongoose.Schema(
     category: {
       type: String,
       required: true,
-      lowercase: true,
-      trim: true,
     },
     tag: {
         type: [String],
@@ -37,7 +35,7 @@ const productSchema = new mongoose.Schema(
       required: true,
       default : 1
     },
-    seller: {
+    sellerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
       required: true,
