@@ -28,7 +28,7 @@ const addProduct = async (productInfo, userId) => {
   product["sellerId"] = userId;
 
 
-   console.log(product)
+console.log(product)
 
 
   return await ProductDAO.addProduct(product);

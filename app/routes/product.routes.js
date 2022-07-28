@@ -7,10 +7,10 @@ const errorCbk = require("../misc/callbacks").errorCbk;
 
 
 
-router.post("/add", hasJWT, async (req, res) => {
+router.post("/add", hasJWT, upload, async (req, res) => {
     try {
-      console.log("toto");
-      const user = await ProductService.addProduct(req.body, req.userId);
+      
+      const user = await ProductService.addProduct(req.body, req.userId);// add product to schema
       return successCbk(res, 200, { user });
     } catch (error) {
   
