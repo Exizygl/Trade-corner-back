@@ -18,7 +18,7 @@ const addProduct = async (productInfo, userId) => {
 
   
   var stringTag = productInfo.tag;
-  product["tag"]= stringTag.split(",");
+  product["tag"]= stringTag.split(",").map(tag => tag.trim());
   product["title"] = productInfo.title;
   product["category"] = productInfo.category;
   product["imageProductUrl"]= productInfo.imageProductUrl;
