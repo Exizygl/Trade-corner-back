@@ -10,8 +10,8 @@ const errorCbk = require("../misc/callbacks").errorCbk;
 router.post("/add", hasJWT, async (req, res) => {
     try {
       console.log("toto");
-      const user = await ProductService.addProduct(req.body, req.userId);
-      return successCbk(res, 200, { user });
+    //   const user = await ProductService.addProduct(req.body, req.userId);
+    //   return successCbk(res, 200, { user });
     } catch (error) {
   
       //const errors = productAddErrors(error)
