@@ -15,7 +15,7 @@ const confirmRegistration = async (user) =>
 // ======= RECHERCHE ========= //
 
 const getByEmail = async (email) =>
-  await UserModel.findOne({ email: new RegExp("^" + email + "$", "i") });
+  await UserModel.findOne({ email: new RegExp("^" + email + "$", "i") }).populate('role', 'label').populate('adress', ['street', 'zipcode', 'city']);
 
 const getByPseudo = async (pseudo) =>
   await UserModel.findOne({ pseudo: new RegExp("^" + pseudo + "$", "i") });

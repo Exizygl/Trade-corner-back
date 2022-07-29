@@ -4,7 +4,7 @@ const { hasJWT } = require("../middlewares/jwt");
 
 const successCbk = require("../misc/callbacks").successCbk;
 const errorCbk = require("../misc/callbacks").errorCbk;
-
+const upload = require("../middlewares/upload");
 
 
 router.post("/add", hasJWT, upload, async (req, res) => {

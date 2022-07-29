@@ -20,7 +20,6 @@ const adressSchema = new mongoose.Schema(
     userIdList: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: "user",
-        required: true,
       },
 
   },

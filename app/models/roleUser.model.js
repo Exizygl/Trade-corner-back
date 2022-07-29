@@ -7,11 +7,11 @@ const roleUserSchema = new mongoose.Schema(
     label: {
         type: String,
         lowercase: true,
+        required: true,
     },
     userIdList: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: "user",
-        required: true,
       },
 
   },
@@ -21,5 +21,5 @@ const roleUserSchema = new mongoose.Schema(
 );
 
 
-const RoleUserModel = mongoose.model("tag", roleUserSchema);
+const RoleUserModel = mongoose.model("roleUser", roleUserSchema);
 module.exports = RoleUserModel;
