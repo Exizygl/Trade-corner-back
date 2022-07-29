@@ -4,13 +4,13 @@ const mongoose = require("mongoose");
 
 const roleUserSchema = new mongoose.Schema(
   {
-    tag: {
+    label: {
         type: String,
         lowercase: true,
     },
-    productIdList: {
+    userIdList: {
         type: [mongoose.Schema.Types.ObjectId],
-        ref: "product",
+        ref: "user",
         required: true,
       },
 
@@ -22,4 +22,4 @@ const roleUserSchema = new mongoose.Schema(
 
 
 const RoleUserModel = mongoose.model("tag", roleUserSchema);
-module.exports = RoleUserTagModel;
+module.exports = RoleUserModel;

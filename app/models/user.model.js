@@ -27,8 +27,8 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
     role: {
-      type: Number,
-      default: 0, // 0 = user, 1 = admin
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "roleUser",
     },
     imageProfilUrl: {
       type: String,

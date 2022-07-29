@@ -13,8 +13,8 @@ const commandSchema = new mongoose.Schema(
             required: true,
         },
         status: {
-            type: String,
-            required: true,
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "statusCommand",
         },
         transporteurId: {
             type: mongoose.Schema.Types.ObjectId,
