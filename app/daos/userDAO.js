@@ -20,7 +20,7 @@ const getByEmail = async (email) =>
 const getByPseudo = async (pseudo) =>
   await UserModel.findOne({ pseudo: new RegExp("^" + pseudo + "$", "i") });
 
-const getById = async (id) => await UserModel.findOne({ _id: id });
+const getById = async (id) => await UserModel.findOne({ _id: id }).populate('role', 'label').populate('adress', ['street', 'zipcode', 'city']);
 
 // ======= MODIFICATIONS ========= //
 

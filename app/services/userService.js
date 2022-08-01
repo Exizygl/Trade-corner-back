@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const emailService = require("./emailService");
-const { signUpAdress, addIdUserToAdress } = require("./adressService");
+const { signUpAdress, addIdUserToAdress, updateAdress } = require("./adressService");
 const { addRole } = require("../daos/roleUserDAO");
 const { getByLabel, addIdUserToRole } = require("./roleUserService");
 
@@ -136,8 +136,12 @@ const userInfoUpdate = async (userInfo, userId) => {
 
   //Gestion des variables de changement d'adresse
   if (userInfo.valueName == "ville") {
-    user["adress"] = userInfo.adress;
-    user["zipcode"] = userInfo.zipcode;
+    const adress = {
+      street : userInfo.adress,
+      zipcode : userInfo.zipcode,
+      city : userInfo.valueChange
+    }
+    
 
     console.log(userInfo.zipcode.toString().length);
     if (userInfo.zipcode.toString().length > 5)
@@ -146,6 +150,13 @@ const userInfoUpdate = async (userInfo, userId) => {
     if (/\d/.test(userInfo.valueChange)) {
       throw "Update User error - City has number";
     }
+
+    const newAdress = await updateAdress(adress, userId);
+    console.log("result " + newAdress);
+
+
+    user[userInfo.valueName] = newAdress._id;
+
   }
   //Vérification des mot de passes
   if (userInfo.valueName == "password") {
