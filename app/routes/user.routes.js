@@ -29,9 +29,9 @@ router.post("/register", async (req, res) => {
     const user = await UserService.signUp(req.body);
     user.password = "***";
     return successCbk(res, 200, { user });
-  } catch (error) {
-    // const errors = signUpErrors(error)
-    return res.status(400).send({ error });
+  } catch (err) {
+    const errors = signUpErrors(err);
+    return res.status(400).send({ errors });
   }
 });
 
