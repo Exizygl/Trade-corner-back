@@ -3,7 +3,6 @@ const ObjectId = require("mongoose").Types.ObjectId;
 
 module.exports.getAllUsers = async (req, res) => {
   const users = await UserModel.find().select("-password").populate('role', 'label').populate('adress', ['street', 'zipcode', 'city']);
-  console.log(JSON.stringify(users));
   return res.status(200).send(users);
 };
 

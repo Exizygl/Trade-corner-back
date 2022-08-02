@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require('fs');
 const emailService = require("./emailService");
+const userService = require("./userService");
+const adressService = require("./adressService");
 
 const getByEmail = async (email) => await userDAO.getByEmail(email);
 const getByPseudo = async (pseudo) => await userDAO.getByPseudo(pseudo);
@@ -23,13 +25,13 @@ const deleteUser = async (req,res,next) => {
     }
     else {
         const userToDelete = await adminDAO.getById(req.userToDeleteId);
-        console.log("user to delete : " + userToDelete);
         emailService.sendEmailAfterDeleteAdmin(userToDelete.email, "DELETE", userToDelete);
         return await adminDAO.deleteUser(req.userToDeleteId);
     }   
 };
 
 const updateUser = async (req, res, next) => {
+  
   const admin = await adminDAO.getById(req.userId);
     if (!admin) {
         throw "probléme d'identification - administrateur non reconnu"
@@ -44,18 +46,23 @@ const updateUser = async (req, res, next) => {
 
     //Gestion des variables de changement d'adresse
     if (req.valueName == "ville") {
-      userToUpdate['adress'] = req.adress;
-      userToUpdate['zipcode'] = req.zipcode;
       
-      console.log(req.zipcode.toString().length)
+        const adress = {
+          street :req.adress,
+          zipcode : req.zipcode,
+          city : req.valueChange
+        };
+        
       if (req.zipcode.toString().length > 5)
-        throw "Update User error - Zipcode too long"
+        throw "Update User error - Zipcode too long";
+        
+        const getuser = await userService.getById(userToUpdate._id);
+        const newAdress = await adressService.updateAdress(adress, getuser);
+        userToUpdate["adress"] = newAdress._id;
     }
 
     //Vérification des mot de passes
     if (req.valueName == "password") {
-      console.log("boucle password");
-
       if (req.valueChange != req.repeatNewPassword)
         throw "Update User error - Not the same password";
 
@@ -65,7 +72,6 @@ const updateUser = async (req, res, next) => {
 
      //Vérification email
      if (req.valueName == "email") {
-      console.log("reconnais le champ email");
       const userCheck = await getByEmail(req.valueChange);
       if (userCheck) throw "Update User error - Email already taken";
 

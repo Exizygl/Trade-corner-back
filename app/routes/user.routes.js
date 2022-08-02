@@ -112,7 +112,6 @@ router.post("/delete", hasJWT, async (req, res) => {
 
 router.post("/forgotten-password", async (req, res) => {
   try {
-    console.log("toyo");
     const user = await UserService.userForgottenPassword(req.body);
     return successCbk(res, 200, { user });
   } catch (error) {

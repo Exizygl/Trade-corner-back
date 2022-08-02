@@ -26,9 +26,7 @@ const getAdressById = async (id) => {
 };
 
 const getAdress = async (adress) => {
-    console.log(adress)
-
-    return await AdressDAO.getByAdress(adress.street, adress.zipcode, adress.city);
+      return await AdressDAO.getByAdress(adress.street, adress.zipcode, adress.city);
 };
 const updateAdress = async (adress, user) => {
     const checkAdress = await getAdress(adress);

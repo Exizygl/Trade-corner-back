@@ -130,8 +130,6 @@ const userInfoUpdate = async (userInfo, userId) => {
       city : userInfo.valueChange
     }
     
-
-    console.log(userInfo.zipcode.toString().length);
     if (userInfo.zipcode.toString().length > 5)
       throw "Update User error - Zipcode too long";
 
@@ -140,12 +138,8 @@ const userInfoUpdate = async (userInfo, userId) => {
     }
     const getuser = await getById(userId);
     const newAdress = await updateAdress(adress, getuser);
-    console.log("result " + newAdress);
-
-
     user["adress"] = newAdress._id;
-    console.log(userInfo.valueName)
-    console.log("toya" + user);
+
 
   }
   //Vérification des mot de passes
@@ -222,9 +216,6 @@ const userSoftDelete = async (userInfo, userId) => {
   if (!isMatch) throw "Delete User error - Mot de passe incorrect";
 
   adressCheck = await getAdressById(userCheck.adress._id);
-
-
- 
 
   if(adressCheck) await deleteAdress(adressCheck, userId)
  
