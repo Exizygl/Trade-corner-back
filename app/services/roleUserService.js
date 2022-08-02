@@ -14,9 +14,17 @@ const addIdUserToRole = async (role, user) => {
     return await RoleUserDAO.addIdList(role);
   };
   
+const removeId = async (role, userId) =>{
+   
+    
+    role.userIdList.pull(userId);
+   
+    return await RoleUserDAO.addIdList(role);
+}
 
 
 module.exports = {
   getByLabel,
   addIdUserToRole,
+  removeId,
 };
