@@ -26,29 +26,42 @@ const getAllRoles = async () => {
     return await RoleUserDAO.getAllRoles();
   };
 
-  const UpdateUserRole = async (req) => {
+  const updateUserRole = async (req) => {
+
     // vérification droit d'admin
     const admin = await adminDAO.getById(req.userId);
     if (!admin) {
         throw "probléme d'identification - administrateur non reconnu"
     }
 
-    //    
     const userToUpdate = {};
     userToUpdate['_id'] = req.userToUpdate;
-    userToUpdate['role'] = req.role;
-    return await adminDAO.updateUser(userToUpdate)
+    //console.log (" utilisateur modifiée = " + JSON.stringify(userToUpdate));
+    
+    // recuperation de l'objectid pour le role
+    const newRole = await RoleUserModel.findOne({label : req.valueChange });
+    //console.log("new role : " + JSON.stringify(newRole));
+    const idNewRole = newRole._id;
+    userToUpdate['role'] = idNewRole;
+    console.log("userToupdate = " + JSON.stringify(userToUpdate));
+     
+    //update de l'utilisateur
+
+    return await RoleUserDAO.updateUser(userToUpdate);
+
+    //ajout dans list id
+
+
+
+
+    //return await adminDAO.updateUser(userToUpdate)
     // .then ()
 
 
     // const userInfoUpdate = async (user) =>
-    // await UserModel.findOneAndUpdate({ _id: ObjectId(userYToUpdate._id) }, userToUpdate, {
-    //   new: true,
-    // });
-  
-
-
-
+    return await UserModel.findOneAndUpdate({ _id: ObjectId(userToUpdate._id) }, userToUpdate, {
+      new: true,
+    });
 
   };
   
@@ -57,6 +70,6 @@ const getAllRoles = async () => {
 module.exports = {
   getByLabel,
   addIdUserToRole,
-  UpdateUserRole,
+  updateUserRole,
   getAllRoles,
 };

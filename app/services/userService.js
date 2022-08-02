@@ -15,11 +15,6 @@ const signUp = async (user) => {
 
   if (userExist) throw "User already exist";
 
-  console.log(user);
-
-  
-  
-  
   if (user)
     emailService.sendEmailForConfirmation(user.email, "REGISTRATION", user);
 
@@ -84,14 +79,9 @@ const signIn = async (email, password, res) => {
   if (!user.isValid)
     throw "Please confirm your email to login - user is not valid";
 
-    
-    console.log(user);
-
   const isMatch = await user.comparePassword(password);
 
   if (!isMatch) throw "Authentication error - wrong password";
-
-
 
   const payload = {
     email: user.email,
@@ -99,7 +89,7 @@ const signIn = async (email, password, res) => {
     id: user._id,
     role: user.role.label,
   };
-  console.log(payload);
+
   let token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: 1500,
   });

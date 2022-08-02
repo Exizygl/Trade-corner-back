@@ -36,8 +36,6 @@ var email = getRandomEmail("@delete.com", name);
 }
 
 const updateUser = async (userToUpdate) => {
-
-  console.log ("Dao = " + userToUpdate._id + " et " + JSON.stringify(userToUpdate));
   await UserModel.findOneAndUpdate({ _id: ObjectId(userToUpdate._id) }, userToUpdate, {
     new: true,
   });

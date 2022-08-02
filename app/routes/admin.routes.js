@@ -21,16 +21,15 @@ router.put("/delete", async (req,res)=>{
 });
 
 router.put("/update", hasJWT, async (req, res) => {
-  console.log("req.body = " + JSON.stringify(req.body));
 
-  if (req.valueName === "role")
+  if (req.body.valueName === "role")
   {
     try {
-      userUpdated = await roleUserService.updateUserRole(req.body);
+      const userUpdated = await roleUserService.updateUserRole(req.body);
       return successCbk(res, 200, { userUpdated });
     }
     catch (error) {
-      return res.status(202).send({ error });
+      return res.status(201).send({ error });
     }
   }
 
