@@ -30,8 +30,8 @@ router.post("/register", async (req, res) => {
     user.password = "***";
     return successCbk(res, 200, { user });
   } catch (err) {
-    const errors = signUpErrors(err);
-    return res.status(400).send({ errors });
+    // const errors = signUpErrors(err);
+    return res.status(400).send();
   }
 });
 
