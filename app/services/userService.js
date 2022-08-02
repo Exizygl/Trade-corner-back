@@ -3,9 +3,9 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const emailService = require("./emailService");
-const { signUpAdress, addIdUserToAdress, updateAdress } = require("./adressService");
+const { signUpAdress, addIdUserToAdress, updateAdress, getAdressById, deleteAdress  } = require("./adressService");
 const { addRole } = require("../daos/roleUserDAO");
-const { getByLabel, addIdUserToRole } = require("./roleUserService");
+const { getByLabel, addIdUserToRole, removeId } = require("./roleUserService");
 
 
 // ======= INSCRIPTION ========= //
@@ -138,12 +138,14 @@ const userInfoUpdate = async (userInfo, userId) => {
     if (/\d/.test(userInfo.valueChange)) {
       throw "Update User error - City has number";
     }
-
-    const newAdress = await updateAdress(adress, userId);
+    const getuser = await getById(userId);
+    const newAdress = await updateAdress(adress, getuser);
     console.log("result " + newAdress);
 
 
-    user[userInfo.valueName] = newAdress._id;
+    user["adress"] = newAdress._id;
+    console.log(userInfo.valueName)
+    console.log("toya" + user);
 
   }
   //Vérification des mot de passes
@@ -211,12 +213,21 @@ const uploadImageUser = async (filename, userId) => {
 
 const userSoftDelete = async (userInfo, userId) => {
   const user = {};
-
+  
   userCheck = await getById(userId); //Get User
+  
 
   //Vérification Mot de passe
   const isMatch = await userCheck.comparePassword(userInfo.password);
   if (!isMatch) throw "Delete User error - Mot de passe incorrect";
+
+  adressCheck = await getAdressById(userCheck.adress._id);
+
+
+ 
+
+  if(adressCheck) await deleteAdress(adressCheck, userId)
+ 
 
   //Création d'une random string pour remplir la BDD
   var chars = "abcdefghijklmnopqrstuvwxyz1234567890";
@@ -230,9 +241,7 @@ const userSoftDelete = async (userInfo, userId) => {
   user["email"] = string + "@delete.com";
   user["Avatar"] = "del";
   user["phoneNumber"] = "del";
-  user["adress"] = "del";
-  user["zipcode"] = "del";
-  user["ville"] = "del";
+  user["adress"] = "62e8f8c841aace4f4c35fef8";
   user["password"] = "delete";
   user["isValid"] = false;
   user["archive"] = true;

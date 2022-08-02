@@ -65,6 +65,13 @@ const getAllRoles = async () => {
 
   };
   
+const removeId = async (role, userId) =>{
+   
+    
+    role.userIdList.pull(userId);
+   
+    return await RoleUserDAO.addIdList(role);
+}
 
 
 module.exports = {
@@ -72,4 +79,5 @@ module.exports = {
   addIdUserToRole,
   updateUserRole,
   getAllRoles,
+  removeId,
 };
