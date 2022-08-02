@@ -33,7 +33,6 @@ const signUp = async (user) => {
 
     const role = await getByLabel("user");
 
-    
 
     const userInfo = {
       pseudo: user.pseudo,
@@ -53,7 +52,6 @@ const signUp = async (user) => {
   await addIdUserToAdress(adress, newUser)
  
   await addIdUserToRole(role, newUser);
-
 
   return newUser;
 

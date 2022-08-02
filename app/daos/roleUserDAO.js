@@ -2,6 +2,10 @@ const RoleUserModel = require("../models/roleUser.model");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 
+const getAllRoles = async () => await  RoleUserModel.find();
+
+
+
 const addRole = async (role) => await new RoleUserModel(role).save();
 
 const getByLabel = async (label) =>
@@ -17,6 +21,7 @@ const getByLabel = async (label) =>
 module.exports = {
     addRole,
     getByLabel,
-    addIdList
+    addIdList,
+    getAllRoles,
   };
   
