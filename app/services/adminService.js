@@ -94,7 +94,10 @@ const uploadImageUser = async (filename, userId, userToUpdate,) => {
 
       // changing picture
       const oldImagePath = `./public/${user.imageProfilUrl}`
-      fs.unlinkSync(oldImagePath)
+      if (fs.existsSync(oldImagePath)) {
+      
+        fs.unlinkSync(oldImagePath);
+      }
   }
 
   const newUser = Object.assign(user,
