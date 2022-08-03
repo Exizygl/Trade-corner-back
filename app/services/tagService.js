@@ -14,18 +14,18 @@ const signUpTag = async (tag) => {
 
 };
 
-const addIdUserToTag = async (tag, product) => {
-
-    tag.userIdList.push(product._id);
+const addIdProductToTag = async (tag, product) => {
+    console.log(tag);
+    tag.productIdList.push(product._id);
     
-    
-    return await TagDAO.addIdList(tag);
+   
+    return await TagDAO.tagInfoUpdate(tag);
 };
 
 
 module.exports = {
     signUpTag,
-    addIdUserToTag,
+    addIdProductToTag,
     
   };
   

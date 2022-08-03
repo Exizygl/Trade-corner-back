@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 
 const categorySchema = new mongoose.Schema(
   {
-    category: {
+    label: {
         type: String,
         required: true,
     },

@@ -1,6 +1,6 @@
 const ProductDAO = require("../daos/productDAO");
-const { addIdUserToCategory, signUpCategory } = require("./categoryService");
-const { signUpTag, addIdUserToTag } = require("./tagService");
+const { signUpCategory, addIdProductToCategory } = require("./categoryService");
+const { signUpTag, addIdProductToTag } = require("./tagService");
 
 
 
@@ -10,9 +10,9 @@ const addProduct = async (productInfo2, userId) => {
   const productInfo = {}
 
   productInfo.title = "Canapé";
-  productInfo.category = "Meuble";
-  productInfo.imageProductUrl= ["canape1.jpg"];
-  productInfo.tag = "canapé, 3 places";
+  productInfo.category = "meuble";
+  productInfo.imageProductUrl= ["canape2.jpg"];
+  productInfo.tag = "canapé, convertible";
   productInfo.description = "ceci est un canapé";
   productInfo.price = 2350;
   productInfo.quantity = 1;
@@ -33,24 +33,24 @@ const addProduct = async (productInfo2, userId) => {
   
   for (var i = 0 ; i< TagArray.length; i++) TagList[i] = await signUpTag(TagArray[i]);
 
-  
+  console.log(TagList)
   
   const TagIdList = []
   
-  for (var i = 0 ; i< TagList.length; i++) TagIdList[i] = TagArray[i]._id;
+  for (var i = 0 ; i< TagList.length; i++) TagIdList[i] = TagList[i]._id;
 
 
   const category = {
-    category : productInfo.category
+    label : productInfo.category
   }
 
   const newCategory = await signUpCategory(category)
 
   console.log(newCategory)
 
-  product["tag"]= TagIdList;
+  product["tagIdList"]= TagIdList;
   product["title"] = productInfo.title;
-  product["category"] = newCategory._id;
+  product["categoryId"] = newCategory._id;
   product["imageProductUrl"]= productInfo.imageProductUrl;
   product["description"] = productInfo.description;
   product["price"] = productInfo.price;
@@ -58,14 +58,14 @@ const addProduct = async (productInfo2, userId) => {
   product["sellerId"] = userId;
 
 
-console.log(product)
+
 
 
   const newProduct = await ProductDAO.addProduct(product);
 
-  await addIdUserToCategory(category, newProduct);
+  await addIdProductToCategory(newCategory, newProduct);
 
-  for (var i = 0 ; i< TagList.length; i++) await addIdUserToTag(TagList[i], newProduct)
+  for (var i = 0 ; i< TagList.length; i++) await addIdProductToTag(TagList[i], newProduct)
 
   return newProduct;
 };
