@@ -10,8 +10,14 @@ const upload = require("../middlewares/upload");
 router.post("/add", hasJWT, upload, async (req, res) => {
     try {
       
-      const user = await ProductService.addProduct(req.body, req.userId);// add product to schema
-      return successCbk(res, 200, { user });
+      const product = await ProductService.addProduct(req.body, req.userId);// add product to schema
+      
+      // const image = await ProductService.uploadImageUser(
+      //   req.file ? req.file.filename : "",
+      //   product._id
+      // );
+      
+      return successCbk(res, 200, { product });
     } catch (error) {
   
       //const errors = productAddErrors(error)

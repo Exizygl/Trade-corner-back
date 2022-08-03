@@ -6,12 +6,11 @@ const categorySchema = new mongoose.Schema(
   {
     category: {
         type: String,
-        lowercase: true,
+        required: true,
     },
     productIdList: {
         type: [mongoose.Schema.Types.ObjectId],
         ref: "product",
-        required: true,
     },
 
   },
@@ -21,5 +20,5 @@ const categorySchema = new mongoose.Schema(
 );
 
 
-const CategoryModel = mongoose.model("tag", categorySchema);
+const CategoryModel = mongoose.model("category", categorySchema);
 module.exports = CategoryModel;
