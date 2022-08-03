@@ -7,17 +7,16 @@ const { hasJWT } = require("../middlewares/jwt");
 const upload = require('../middlewares/upload');
 
 
-// Router PUT
-
+// Router GET
 
 
 router.get('/', hasJWT, upload, async (req, res) => {
   try {
     const roles = await roleUserService.getAllRoles();
-      return successCbk(res, 200, { roles });
+    return successCbk(res, 200, { roles });
   }
   catch (error) {
-      return errorCbk(res, 405, error);
+    return errorCbk(res, 405, error);
   }
 });
 

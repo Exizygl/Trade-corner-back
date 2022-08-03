@@ -9,10 +9,9 @@ function getRandomString (length) {
       string += chars[Math.floor(Math.random() * chars.length)];
   }
   return string
-
 }
+
 function getRandomEmail (domain, string) {
-  
   return string + domain
 }
 
@@ -20,8 +19,8 @@ const getById = async (id) => await UserModel.findOne({ _id: id });
 
 const deleteUser = async (userId) => {
 
-var name = getRandomString(14);
-var email = getRandomEmail("@delete.com", name);
+  var name = getRandomString(14);
+  var email = getRandomEmail("@delete.com", name);
   await UserModel.updateOne({ _id: ObjectId(userId) }, {Avatar: "supprimé", 
                                                         pseudo:name, 
                                                         name: name, 
@@ -37,7 +36,7 @@ const updateUser = async (userToUpdate) => {
   await UserModel.findOneAndUpdate({ _id: ObjectId(userToUpdate._id) }, userToUpdate, {
     new: true,
   });
-  }
+}
 
 module.exports = {
   getById,

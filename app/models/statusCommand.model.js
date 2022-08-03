@@ -21,5 +21,5 @@ const statusCommandSchema = new mongoose.Schema(
 );
 
 
-const StatusCommandModel = mongoose.model("tag", statusCommandSchema);
+const StatusCommandModel = mongoose.model("command", statusCommandSchema);
 module.exports = StatusCommandModel;

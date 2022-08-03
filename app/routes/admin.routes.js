@@ -34,13 +34,14 @@ router.put("/update", hasJWT, async (req, res) => {
   }
 
   try {
-      const userUpdated = await adminService.updateUser(req.body);
+    const userUpdated = await adminService.updateUser(req.body);
     return successCbk(res, 200, { userUpdated });
   } catch (error) {
-    //const errors = updateErrors(error)
-    return res.status(202).send({ error });
+    return res.status(201).send({ error });
   }
 });
+
+//Route POST
 
 router.post('/upload-image', hasJWT, upload, async (req, res) => {
   try {

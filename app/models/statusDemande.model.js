@@ -21,5 +21,5 @@ const statusDemandeSchema = new mongoose.Schema(
 );
 
 
-const StatusDemandeModel = mongoose.model("tag", statusDemandeSchema);
+const StatusDemandeModel = mongoose.model("demande", statusDemandeSchema);
 module.exports = StatusDemandeModel;

@@ -3,7 +3,7 @@ const UserModel = require("../models/user.model");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 
-const getAllRoles = async () => await  RoleUserModel.find();
+const getAllRoles = async () => await RoleUserModel.find();
 
 const addRole = async (role) => await new RoleUserModel(role).save();
 
@@ -15,17 +15,15 @@ const addIdList = async (role) =>
 });
 
 const updateUser = async (userToUpdate) =>
-{console.log ("entrée boucle DAO ");
-
-// push dans la liste du role - OK
+{// push de l'idUser dans la liste du nouveau role
 await RoleUserModel.findOneAndUpdate({_id: ObjectId(userToUpdate.role)}, {$push : {userIdList : ObjectId(userToUpdate._id)}});
 
-//update user - OK
+//update user
  const exUser = await UserModel.findOneAndUpdate({ _id: ObjectId(userToUpdate._id) }, { role : ObjectId(userToUpdate.role)}, {
    new: false,
  });
 
- //supression de l'idUser dans le tableau de l'ancien role - OK
+ //supression de l'idUser dans la liste de l'ancien role
  const exRole = exUser.role;
  await RoleUserModel.findOneAndUpdate({_id: ObjectId(exRole)}, {$pull: {userIdList : ObjectId(userToUpdate._id)}});
  };
@@ -33,10 +31,10 @@ await RoleUserModel.findOneAndUpdate({_id: ObjectId(userToUpdate.role)}, {$push 
   
 
 module.exports = {
-    addRole,
-    getByLabel,
-    addIdList,
-    getAllRoles,
-    updateUser
-  };
+  getAllRoles,
+  addRole,
+  getByLabel,
+  addIdList,
+  updateUser
+};
   

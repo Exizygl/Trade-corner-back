@@ -51,10 +51,6 @@ const sendEmailForConfirmation = (email, key, user) => {
 };
 
 const sendEmailAfterDeleteAdmin = (email, key, user) => {
-  const emailCrypt = CryptoJS.AES.encrypt(
-    email,
-    process.env.MAILING_SERVICE_CLIENT_SECRET
-  ).toString();
   const subject = "Supression de votre compte e-commerce";
   const bodyMessage = `<h2> ${user.pseudo} ! Votre compte sur le site e-commerce a été supprimé</h2>
     <h4> Un administrateur a supprimé votre compte sur le site e-commerce. Vos données personnelles ont été supprimées et votre compte cloturé.
