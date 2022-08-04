@@ -16,7 +16,6 @@ const {
 const { hasJWT } = require("../middlewares/jwt");
 const upload = require("../middlewares/upload");
 
-
 // Router POST
 
 router.post("/register", async (req, res) => {
@@ -25,8 +24,8 @@ router.post("/register", async (req, res) => {
     user.password = "***";
     return successCbk(res, 200, { user });
   } catch (error) {
-    // const errors = signUpErrors(error)
-    return res.status(400).send({ error });
+    const errors = signUpErrors(error);
+    return res.status(400).send({ errors });
   }
 });
 
