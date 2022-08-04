@@ -40,9 +40,9 @@ const userSchema = new mongoose.Schema(
       maxLength: 20,
     },
     adress: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "adress",
-        required: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "adress",
+      required: true,
     },
     isValid: {
       type: Boolean,
@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema(
     productIdList: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "product",
-      
+
     },
     commandIdList: {
       type: [mongoose.Schema.Types.ObjectId],
@@ -63,15 +63,15 @@ const userSchema = new mongoose.Schema(
       max: 1024,
       minLength: 6,
     },
-    archive: {
-      type: Boolean,
-      default: false,
-    },
     passwordConfirmation: {
       type: String,
       required: true,
       max: 1024,
       minLength: 6,
+    },
+    archive: {
+      type: Boolean,
+      default: false,
     },
   },
   {

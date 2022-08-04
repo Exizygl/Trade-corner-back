@@ -9,12 +9,12 @@ const addProduct = async (productInfo2, userId) => {
   
   const productInfo = {}
 
-  productInfo.title = "Canapé";
-  productInfo.category = "meuble";
-  productInfo.imageProductUrl= ["canape2.jpg"];
-  productInfo.tag = "canapé, convertible";
-  productInfo.description = "ceci est un canapé";
-  productInfo.price = 2350;
+  productInfo.title = "velo électrique";
+  productInfo.category = "velo";
+  productInfo.imageProductUrl= ["velo1.jpg"];
+  productInfo.tag = "velo, électrique, pure";
+  productInfo.description = "ceci est une peluche";
+  productInfo.price = 10;
   productInfo.quantity = 1;
   productInfo.sellerId = userId;
   
@@ -72,6 +72,8 @@ const addProduct = async (productInfo2, userId) => {
 
 const getById = async (id) => await ProductDAO.getById(id);
 
+const getAllProducts = async () => await ProductDAO.getAllProducts();
+
 const uploadImageUser = async (filename, id) => {
   const product = await getById(id);
 
@@ -96,7 +98,9 @@ const uploadImageUser = async (filename, id) => {
   return await UserDAO.uploadImageUser(newUser);
 };
 
+ 
 module.exports = {
   addProduct,
-  uploadImageUser
+  uploadImageUser,
+  getAllProducts,
 };

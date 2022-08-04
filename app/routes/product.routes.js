@@ -25,5 +25,18 @@ router.post("/add", hasJWT, upload, async (req, res) => {
       // return res.status(200).send({ errors });
     }
   });
+// Router GET
 
-  module.exports = router;
+router.get("/", async (res) => {
+  try {
+   
+    const productList = await ProductService.getAllProducts();
+    console.log(productList)
+    return res.status(200).send(productList);
+  } catch (error) {
+    
+  }
+});
+
+
+module.exports = router;
