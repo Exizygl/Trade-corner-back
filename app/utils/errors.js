@@ -1,6 +1,7 @@
 const signUpErrors = (err) => {
   let errors = { pseudo: "", email: "", password: "" };
   console.log(err);
+<<<<<<< HEAD
   if (err.message.includes("pseudo"))
     errors.pseudo = "Pseudo incorrect ou déjà pris";
 
@@ -8,6 +9,14 @@ const signUpErrors = (err) => {
 
   if (err.message.includes("password"))
     errors.password = "Le mot de passe doit faire 8 caractères minimum";
+=======
+  //   if (err.message("pseudo")) errors.pseudo = "Pseudo incorrect ou déjà pris";
+
+  //   if (err.message("email")) errors.email = "Email incorrect";
+
+  //   if (err.message("password"))
+  //     errors.password = "Le mot de passe doit faire 6 caractères minimum";
+>>>>>>> main
 
   if (err.code === 11000 && Object.keys(err.keyValue)[0].includes("pseudo"))
     errors.pseudo = "Ce pseudo est déjà pris";

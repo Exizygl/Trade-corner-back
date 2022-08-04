@@ -18,19 +18,13 @@ const upload = require("../middlewares/upload");
 
 // Router POST
 
-// router.post("/register", userCtrl.register);
-// router.post("/activation", userCtrl.activateEmail);
-// router.post("/login", authController.signIn);
-// router.post("/register", authController.signUp);
-// router.post("/login", authController.signIn);
-
 router.post("/register", async (req, res) => {
   try {
     const user = await UserService.signUp(req.body);
     user.password = "***";
     return successCbk(res, 200, { user });
   } catch (err) {
-    // const errors = signUpErrors(err);
+    const errors = signUpErrors(err);
     return res.status(400).send();
   }
 });
@@ -63,15 +57,6 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     const errors = signInErrors(error);
     return res.status(200).send({ errors });
-  }
-});
-
-router.get("/logout", async (req, res) => {
-  try {
-    res.clearCookie("refreshtoken", { path: "/user/refresh_token" });
-    return res.json({ msg: "Logged out" });
-  } catch (err) {
-    return res.status(500).json({ msg: err.message });
   }
 });
 
@@ -112,7 +97,6 @@ router.post("/delete", hasJWT, async (req, res) => {
 
 router.post("/forgotten-password", async (req, res) => {
   try {
-    console.log("toyo");
     const user = await UserService.userForgottenPassword(req.body);
     return successCbk(res, 200, { user });
   } catch (error) {
@@ -131,7 +115,34 @@ router.post("/password-change", async (req, res) => {
   }
 });
 
+// Router PUT
+
+router.put("/confirm", async (req, res) => {
+  const { emailCrypt } = req.body;
+
+  try {
+    const user = await UserService.confirmRegistration(emailCrypt);
+    user.password = "***";
+
+    return successCbk(res, 200, user);
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: "Confirmation non autorisé",
+    });
+  }
+});
+
 // Router GET
+
+router.get("/logout", async (req, res) => {
+  try {
+    res.clearCookie("refreshtoken", { path: "/user/refresh_token" });
+    return res.json({ msg: "Logged out" });
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+});
 
 router.get("/", userController.getAllUsers);
 router.get("/:id", userController.userInfo);

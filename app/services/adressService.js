@@ -1,5 +1,5 @@
 const AdressDAO = require("../daos/adressDAO");
-const { getById } = require("./userService");
+
 
 
 // ======= INSCRIPTION ========= //
@@ -13,52 +13,55 @@ const signUpAdress = async (adress) => {
 };
 
 const addIdUserToAdress = async (adress, user) => {
+
     adress.userIdList.push(user._id);
+    
     
     return await AdressDAO.addIdList(adress);
 };
 
-const getAdressById = async (adress) => {
+const getAdressById = async (id) => {
     
-    return await AdressDAO.getAdressById(user.adress._id);
+    return await AdressDAO.getAdressById(id);
 };
 
 const getAdress = async (adress) => {
-    console.log(adress)
-
-    return await AdressDAO.getByAdress(adress.street, adress.zipcode, adress.city);
+      return await AdressDAO.getByAdress(adress.street, adress.zipcode, adress.city);
 };
-const updateAdress = async (adress, userId) => {
+const updateAdress = async (adress, user) => {
     const checkAdress = await getAdress(adress);
-    console.log("check" + checkAdress)
+    const oldAdress = await getAdressById(user.adress._id);
+    
 
     if (checkAdress){ //si adresse déjà dans la base
-        console.log("check Adress" + checkAdress.street);
-        const checkId = checkAdress.userIdList.filter(data => data = userId);
-        console.log(checkid);
-        if(checkId) return checkAdress; // si le user a déjà cette adress
-        console.log("toyo")
-        return await addIdUserToAdress(checkAdress, userId) // si le user avait une adresse différente.
+        
+        const idList = checkAdress.userIdList;
+        const checkId = idList.filter(data => data.equals(user._id));
+        
+        if(checkId.lenght > 0) return checkAdress; // si le user a déjà cette adress
+        
+
+        await deleteAdress(oldAdress, user._id);
+
+        return await addIdUserToAdress(checkAdress, user._id) // si le user avait une adresse différente.
 
     }
 
     const newAdress = await signUpAdress(adress); 
 
-    const user = await getById(userId);
-
-    const oldAdress = getAdressById(user.adress._id);
-
-    await deleteAdress(oldAdress, userId);
+    await deleteAdress(oldAdress, user._id);
 
     
-    
-    return await AdressDAO.addIdList(newAdress);
+    return await addIdUserToAdress(newAdress, user);
 };
 
-const deleteAdress = async (oldadress, userId) =>{
-    adress = oldadress.userIdList.filter(data => data != userId);
-    if (adress.userIdList.lenght == 0) return await AdressDAO.deleteAdress(oldadress);
-    return await AdressDAO.adressInfoUpdate(adress);
+const deleteAdress = async (adress, userId) =>{
+   
+    changeAdress = adress
+    changeAdress.userIdlist = adress.userIdList.pull(userId);
+   
+    if (!changeAdress.userIdList[0]) return await AdressDAO.deleteAdress(adress);
+    return await AdressDAO.adressInfoUpdate(changeAdress);
 }
 
 
@@ -67,5 +70,6 @@ module.exports = {
   addIdUserToAdress,
   updateAdress,
   getAdress,
-  deleteAdress
+  deleteAdress,
+  getAdressById,
 };
