@@ -25,7 +25,7 @@ router.post("/register", async (req, res) => {
     return successCbk(res, 200, { user });
   } catch (err) {
     const errors = signUpErrors(err);
-    return res.status(400).send();
+    return res.status(400).send({ errors });
   }
 });
 

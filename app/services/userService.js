@@ -20,9 +20,9 @@ const signUp = async (user) => {
   const checkPseudo = await getByPseudo(user.pseudo);
 
   if (checkEmail) {
-    throw "Cet email est déjà enregistré veuillez vous connecter";
+    throw "Cet email est déjà enregistré";
   } else if (checkPseudo) {
-    throw "Ce pseudo est déjà choisi, veuillez en saisir un autre";
+    throw "Ce pseudo est déjà choisi";
   }
 
   if (user)
@@ -75,6 +75,8 @@ const getByEmail = async (email) => await UserDAO.getByEmail(email);
 const getByPseudo = async (pseudo) => await UserDAO.getByPseudo(pseudo);
 
 const getById = async (id) => await UserDAO.getById(id);
+
+// const checkEmail = async(email) => await UserDAO.;
 
 // ======= AUTHENTIFICATION ========= //
 
