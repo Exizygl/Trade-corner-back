@@ -40,7 +40,7 @@ app.use('/static', express.static(__dirname + '/public'));
 app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/product", productRoutes);
- 
+
 
 app.get("/api", (req, res) => res.status(200).send({ message: "test server" }));
 

@@ -27,13 +27,24 @@ router.post("/add", hasJWT, upload, async (req, res) => {
   });
 // Router GET
 
-router.get("/", async (res) => {
+router.get("/", async (req , res) => {
   try {
-   
     const productList = await ProductService.getAllProducts();
-    console.log(productList)
-    return res.status(200).send(productList);
+    return successCbk(res, 200, { productList });
   } catch (error) {
+
+     return res.status(201).send({error });
+    
+  }
+});
+router.get("/new", async (req , res) => {
+  try {
+    const productList = await ProductService.getNewProducts();
+    console.log(productList);
+    return successCbk(res, 200, { productList });
+  } catch (error) {
+
+     return res.status(201).send({error });
     
   }
 });

@@ -74,6 +74,8 @@ const getById = async (id) => await ProductDAO.getById(id);
 
 const getAllProducts = async () => await ProductDAO.getAllProducts();
 
+const getNewProducts = async () => await ProductDAO.getNewProducts();
+
 const uploadImageUser = async (filename, id) => {
   const product = await getById(id);
 
@@ -103,4 +105,6 @@ module.exports = {
   addProduct,
   uploadImageUser,
   getAllProducts,
+  getById,
+  getNewProducts
 };
