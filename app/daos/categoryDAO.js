@@ -3,6 +3,7 @@ const ObjectId = require("mongoose").Types.ObjectId;
 
 const signUp = async (category) => await new CategoryModel(category).save();
 
+const getAllCategory = async () => await CategoryModel.find();
 
 const getByCategory = async (label) =>
     await CategoryModel.findOne({ label: new RegExp("^" + label + "$", "i") });
@@ -12,8 +13,12 @@ const categoryInfoUpdate = async (category) =>
         new: true,
     });
 
+
+
 module.exports = {
     signUp,
+    getAllCategory,
     getByCategory,
     categoryInfoUpdate,
+    
 };

@@ -1,6 +1,7 @@
 const CategoryDAO = require("../daos/categoryDAO");
 
 
+
 const signUpCategory = async (category) => {
 
     console.log(category.label)
@@ -19,12 +20,15 @@ const addIdProductToCategory = async (category, product) => {
     
     return await CategoryDAO.categoryInfoUpdate(categoryExist);
 };
-
+const getAllCategory = async () => { 
+    return await CategoryDAO.getAllCategory();
+};
 
 
 module.exports = {
     signUpCategory,
     addIdProductToCategory,
+    getAllCategory,
     
   };
   

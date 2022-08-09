@@ -10,10 +10,10 @@ const uploadImageProduct = async (filename, userId) => {
 
 
 
-<<<<<<< HEAD
+
   console.log("boucle service");
 
-=======
+
 const addProduct = async (productInfo2, userId) => {
   
   const productInfo = {}
@@ -27,7 +27,7 @@ const addProduct = async (productInfo2, userId) => {
   productInfo.quantity = 1;
   productInfo.sellerId = userId;
   
->>>>>>> 1b0fedcfb29e8aa55d508ed8afc9d29e07dff623
+
   const product = {}
 
 
@@ -35,15 +35,7 @@ const addProduct = async (productInfo2, userId) => {
 
 
 
-<<<<<<< HEAD
-  
-  // var stringTag = productInfo.tag;
-  // product["tag"]= stringTag.split(",").map(tag => tag.trim());
-  product["tag"] = "tag 1";
-  product["title"] = productInfo.title;
-  product["category"] = productInfo.category;
-  // product["imageProductUrl"]= productInfo.imageProductUrl;
-=======
+
   var stringTag = productInfo.tag;
   console.log(stringTag)
   const TagArray = stringTag.split(",").map(tag => tag.trim());
@@ -71,17 +63,15 @@ const addProduct = async (productInfo2, userId) => {
   product["title"] = productInfo.title;
   product["categoryId"] = newCategory._id;
   product["imageProductUrl"]= productInfo.imageProductUrl;
->>>>>>> 1b0fedcfb29e8aa55d508ed8afc9d29e07dff623
   product["description"] = productInfo.description;
   product["price"] = productInfo.price;
   product["quantity"] = productInfo.quantity;
   product["sellerId"] = userId;
 
 
-<<<<<<< HEAD
+
    console.log(product)
-=======
->>>>>>> 1b0fedcfb29e8aa55d508ed8afc9d29e07dff623
+
 
 
 

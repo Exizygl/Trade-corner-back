@@ -15,15 +15,13 @@ router.post("/add", hasJWT, async (req, res) => {
   try {
       
       const product = await ProductService.addProduct(req.body, req.userId);// add product to schema
-<<<<<<< HEAD
-=======
+
       
       // const image = await ProductService.uploadImageUser(
       //   req.file ? req.file.filename : "",
       //   product._id
       // );
       
->>>>>>> 1b0fedcfb29e8aa55d508ed8afc9d29e07dff623
       return successCbk(res, 200, { product });
     } catch (error) {
   
