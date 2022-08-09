@@ -27,8 +27,8 @@ const userSchema = new mongoose.Schema(
       trim: true,
     },
     role: {
-      type: Number,
-      default: 0, // 0 = user, 1 = admin
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "roleUser",
     },
     imageProfilUrl: {
       type: String,
@@ -40,21 +40,22 @@ const userSchema = new mongoose.Schema(
       maxLength: 20,
     },
     adress: {
-      type: String,
-      required: true,
-    },
-    zipcode: {
-      type: String,
-      required: true,
-      maxLength: 5,
-    },
-    ville: {
-      type: String,
-      required: true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "adress",
+        required: true,
     },
     isValid: {
       type: Boolean,
       default: false,
+    },
+    productIdList: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "product",
+      
+    },
+    commandIdList: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "command",
     },
     password: {
       type: String,

@@ -1,8 +1,15 @@
 const ProductDAO = require("../daos/productDAO");
 
+const uploadImageProduct = async (filename, userId) => {
+  
+  return await UserDAO.uploadImageUser(newUser);
+};
+
 
 
 const addProduct = async (productInfo, userId) => {
+
+  console.log("boucle service");
 
   const product = {}
 
@@ -17,11 +24,12 @@ const addProduct = async (productInfo, userId) => {
 
 
   
-  var stringTag = productInfo.tag;
-  product["tag"]= stringTag.split(",").map(tag => tag.trim());
+  // var stringTag = productInfo.tag;
+  // product["tag"]= stringTag.split(",").map(tag => tag.trim());
+  product["tag"] = "tag 1";
   product["title"] = productInfo.title;
   product["category"] = productInfo.category;
-  product["imageProductUrl"]= productInfo.imageProductUrl;
+  // product["imageProductUrl"]= productInfo.imageProductUrl;
   product["description"] = productInfo.description;
   product["price"] = productInfo.price;
   product["quantity"] = productInfo.quantity;

@@ -15,12 +15,19 @@ const confirmRegistration = async (user) =>
 // ======= RECHERCHE ========= //
 
 const getByEmail = async (email) =>
-  await UserModel.findOne({ email: new RegExp("^" + email + "$", "i") });
+  await UserModel.findOne({ email: new RegExp("^" + email + "$", "i") })
+    .populate("role", "label")
+    .populate("adress", ["street", "zipcode", "city"]);
 
 const getByPseudo = async (pseudo) =>
   await UserModel.findOne({ pseudo: new RegExp("^" + pseudo + "$", "i") });
 
-const getById = async (id) => await UserModel.findOne({ _id: id });
+const getById = async (id) =>
+  await UserModel.findOne({ _id: id })
+    .populate("role", "label")
+    .populate("adress", ["street", "zipcode", "city"]);
+
+// const checkEmail = async (email) => await UserModel.findOne;
 
 // ======= MODIFICATIONS ========= //
 
@@ -29,10 +36,10 @@ const userInfoUpdate = async (user) =>
     new: true,
   });
 
-const uploadImageUser = async (user) => await UserModel.findOneAndUpdate({ _id: ObjectId(user._id) }, user, { new: true })
-
-
-
+const uploadImageUser = async (user) =>
+  await UserModel.findOneAndUpdate({ _id: ObjectId(user._id) }, user, {
+    new: true,
+  });
 
 module.exports = {
   signUp,
@@ -41,5 +48,5 @@ module.exports = {
   getByPseudo,
   getById,
   userInfoUpdate,
-  uploadImageUser
+  uploadImageUser,
 };

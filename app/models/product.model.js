@@ -8,17 +8,19 @@ const productSchema = new mongoose.Schema(
       minLength: 3,
       maxLength: 200
     },
-    category: {
-      type: String,
-      required: true,
+    categoryId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "category",
+      //required: true,
     },
-    tag: {
-        type: [String],
-        lowercase: true,
+    tagIdList: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "tag",
+      //required: true,
     },
     imageProductUrl: {
       type: [String],
-      required: true,
+      //required: true,
       
     },
     description: {

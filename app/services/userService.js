@@ -3,18 +3,59 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const emailService = require("./emailService");
+const {
+  signUpAdress,
+  addIdUserToAdress,
+  updateAdress,
+  getAdressById,
+  deleteAdress,
+} = require("./adressService");
+const { addRole } = require("../daos/roleUserDAO");
+const { getByLabel, addIdUserToRole, removeId } = require("./roleUserService");
 
 // ======= INSCRIPTION ========= //
 
 const signUp = async (user) => {
-  const userExist = await getByEmail(user.email);
+  const checkEmail = await getByEmail(user.email);
+  const checkPseudo = await getByPseudo(user.pseudo);
 
-  if (userExist) throw "User already exist";
+  if (checkEmail) {
+    throw "Cet email est déjà enregistré";
+  } else if (checkPseudo) {
+    throw "Ce pseudo est déjà choisi";
+  }
 
   if (user)
     emailService.sendEmailForConfirmation(user.email, "REGISTRATION", user);
 
-  return await UserDAO.signUp(user);
+  const newAdress = {
+    street: user.adress,
+    zipcode: user.zipcode,
+    city: user.ville,
+  };
+
+  const adress = await signUpAdress(newAdress);
+
+  const role = await getByLabel("user");
+
+  const userInfo = {
+    pseudo: user.pseudo,
+    name: user.name,
+    email: user.email,
+    phoneNumber: user.phoneNumber,
+    role: role._id,
+    adress: adress._id,
+    password: user.password,
+    passwordConfirmation: user.passwordConfirmation,
+  };
+
+  const newUser = await UserDAO.signUp(userInfo);
+
+  await addIdUserToAdress(adress, newUser);
+
+  await addIdUserToRole(role, newUser);
+
+  return newUser;
 };
 
 const confirmRegistration = async (emailCrypt) => {
@@ -35,6 +76,8 @@ const getByPseudo = async (pseudo) => await UserDAO.getByPseudo(pseudo);
 
 const getById = async (id) => await UserDAO.getById(id);
 
+// const checkEmail = async(email) => await UserDAO.;
+
 // ======= AUTHENTIFICATION ========= //
 
 const signIn = async (email, password, res) => {
@@ -52,7 +95,7 @@ const signIn = async (email, password, res) => {
     email: user.email,
     pseudo: user.pseudo,
     id: user._id,
-    role: user.role,
+    role: user.role.label,
   };
 
   let token = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
@@ -89,16 +132,21 @@ const userInfoUpdate = async (userInfo, userId) => {
 
   //Gestion des variables de changement d'adresse
   if (userInfo.valueName == "ville") {
-    user["adress"] = userInfo.adress;
-    user["zipcode"] = userInfo.zipcode;
+    const adress = {
+      street: userInfo.adress,
+      zipcode: userInfo.zipcode,
+      city: userInfo.valueChange,
+    };
 
-    console.log(userInfo.zipcode.toString().length);
     if (userInfo.zipcode.toString().length > 5)
       throw "Update User error - Zipcode too long";
 
     if (/\d/.test(userInfo.valueChange)) {
       throw "Update User error - City has number";
     }
+    const getuser = await getById(userId);
+    const newAdress = await updateAdress(adress, getuser);
+    user["adress"] = newAdress._id;
   }
   //Vérification des mot de passes
   if (userInfo.valueName == "password") {
@@ -150,10 +198,8 @@ const uploadImageUser = async (filename, userId) => {
     // changing picture
     const oldImagePath = `./public/${user.imageProfilUrl}`;
     if (fs.existsSync(oldImagePath)) {
-      
       fs.unlinkSync(oldImagePath);
     }
-    
   }
 
   const newUser = Object.assign(user, {
@@ -172,6 +218,10 @@ const userSoftDelete = async (userInfo, userId) => {
   const isMatch = await userCheck.comparePassword(userInfo.password);
   if (!isMatch) throw "Delete User error - Mot de passe incorrect";
 
+  adressCheck = await getAdressById(userCheck.adress._id);
+
+  if (adressCheck) await deleteAdress(adressCheck, userId);
+
   //Création d'une random string pour remplir la BDD
   var chars = "abcdefghijklmnopqrstuvwxyz1234567890";
   var string = "";
@@ -184,9 +234,7 @@ const userSoftDelete = async (userInfo, userId) => {
   user["email"] = string + "@delete.com";
   user["Avatar"] = "del";
   user["phoneNumber"] = "del";
-  user["adress"] = "del";
-  user["zipcode"] = "del";
-  user["ville"] = "del";
+  user["adress"] = "62e8f8c841aace4f4c35fef8";
   user["password"] = "delete";
   user["isValid"] = false;
   user["archive"] = true;
