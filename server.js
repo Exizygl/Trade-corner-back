@@ -41,8 +41,12 @@ app.use('/static', express.static(__dirname + '/public'));
 app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/product", productRoutes);
+<<<<<<< HEAD
 app.use("/api/roleUsers", roleUserRoutes);
  
+=======
+
+>>>>>>> 1b0fedcfb29e8aa55d508ed8afc9d29e07dff623
 
 app.get("/api", (req, res) => res.status(200).send({ message: "test server" }));
 
