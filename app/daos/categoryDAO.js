@@ -7,6 +7,7 @@ const getAllCategory = async () => await CategoryModel.find();
 
 const getByCategory = async (label) =>
     await CategoryModel.findOne({ label: new RegExp("^" + label + "$", "i") });
+    //await CategoryModel.findOne({label : label});
 
 const categoryInfoUpdate = async (category) =>
     await CategoryModel.findOneAndUpdate({ _id: ObjectId(category._id) }, category, {

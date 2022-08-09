@@ -14,9 +14,12 @@ const signUpCategory = async (category) => {
 };
 
 const addIdProductToCategory = async (category, product) => {
+    console.log("service addIdProduct to category");
     const categoryExist = await CategoryDAO.getByCategory(category.label);
+    //console.log("category existe : " + JSON.stringify(categoryExist));
+    //console.log("product : "+ JSON.stringify(product));
     categoryExist.productIdList.push(product._id);
-    console.log(categoryExist)
+    
     
     return await CategoryDAO.categoryInfoUpdate(categoryExist);
 };

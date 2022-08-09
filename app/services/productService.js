@@ -1,3 +1,4 @@
+const { getByCategory } = require("../daos/categoryDAO");
 const ProductDAO = require("../daos/productDAO");
 const { signUpCategory, addIdProductToCategory } = require("./categoryService");
 const { signUpTag, addIdProductToTag } = require("./tagService");
@@ -8,78 +9,63 @@ const uploadImageProduct = async (filename, userId) => {
 };
 
 
-
-
-
-  console.log("boucle service");
-
-
-const addProduct = async (productInfo2, userId) => {
-  
-  const productInfo = {}
-
-  productInfo.title = "velo électrique";
-  productInfo.category = "velo";
-  productInfo.imageProductUrl= ["velo1.jpg"];
-  productInfo.tag = "velo, électrique, pure";
-  productInfo.description = "ceci est une peluche";
-  productInfo.price = 10;
-  productInfo.quantity = 1;
-  productInfo.sellerId = userId;
   
 
-  const product = {}
 
+const addProduct = async (productInfo, userId) => {
+  //console.log("boucle service");
+  
+  // const productInfo = {}
 
- console.log(productInfo)
+  // productInfo.title = "velo électrique";
+  // productInfo.category = "velo";
+  // productInfo.imageProductUrl= ["velo1.jpg"];
+  // productInfo.tag = "velo, électrique, pure";
+  // productInfo.description = "ceci est une peluche";
+  // productInfo.price = 10;
+  // productInfo.quantity = 1;
+  // productInfo.sellerId = userId;
+  
+ //console.log("product info : " + JSON.stringify(productInfo));
 
-
-
-
-  var stringTag = productInfo.tag;
-  console.log(stringTag)
+  var stringTag = productInfo.tags;
+  //console.log("stringtag : " + stringTag);
   const TagArray = stringTag.split(",").map(tag => tag.trim());
-  console.log(TagArray)
+  //console.log("tag array : " + TagArray);
   const TagList = [];
-  
   for (var i = 0 ; i< TagArray.length; i++) TagList[i] = await signUpTag(TagArray[i]);
-
-  console.log(TagList)
-  
-  const TagIdList = []
-  
+  console.log("tag list : " + TagList);
+  const TagIdList = [];
   for (var i = 0 ; i< TagList.length; i++) TagIdList[i] = TagList[i]._id;
 
+  console.log("productInfo.category = " + productInfo.category);
 
-  const category = {
-    label : productInfo.category
-  }
+//----PROBLEME ICI
+  const category = await getByCategory(productInfo.category);
+  console.log( "category retrouvé : " + category);
+ //const newCategory = await signUpCategory(category)
 
-  const newCategory = await signUpCategory(category)
-
-  console.log(newCategory)
-
+  //console.log(newCategory)
+const product = {};
   product["tagIdList"]= TagIdList;
   product["title"] = productInfo.title;
-  product["categoryId"] = newCategory._id;
-  product["imageProductUrl"]= productInfo.imageProductUrl;
+  product["categoryId"] = category._id;
+  //product["category"]= productInfo.category;
+  product["imageProductUrl"]= ["velo1.jpg"];
   product["description"] = productInfo.description;
   product["price"] = productInfo.price;
   product["quantity"] = productInfo.quantity;
   product["sellerId"] = userId;
 
-
-
-   console.log(product)
-
-
+  //console.log("product = " + JSON.stringify(product));
 
 
   const newProduct = await ProductDAO.addProduct(product);
+  console.log("new product = " + JSON.stringify(newProduct));
 
-  await addIdProductToCategory(newCategory, newProduct);
+  await addIdProductToCategory(category, newProduct); //newproductundefined
 
-  for (var i = 0 ; i< TagList.length; i++) await addIdProductToTag(TagList[i], newProduct)
+  for (var i = 0 ; i< TagList.length; i++) await addIdProductToTag(TagList[i], newProduct);
 
   return newProduct;
 };
