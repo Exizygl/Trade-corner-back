@@ -7,12 +7,12 @@ const { signUpTag, addIdProductToTag } = require("./tagService");
 
 
 
-const addProduct = async (filename, productInfo, userId) => {
+const addProduct = async (files, productInfo, userId) => {
 
   console.log("ça rentre dans les services");
     console.log("productInfo : " + JSON.stringify(productInfo));
-    // console.log("user id : " + userId);
-    // console.log("filename : " + filename);
+    console.log("user id : " + userId);
+   console.log("files " + files[0]);
 
   // --------------------- GESTION DES TAGS ----------------------
 
@@ -37,13 +37,18 @@ const addProduct = async (filename, productInfo, userId) => {
 
 const category = await getByCategory(productInfo.category);
 
+ // --------------------- GESTION DES IMAGES ----------------------
+
+ console.log("filename : " + filename);
+
  // --------------------- CREATION ET ENREGISTREMENT DU PRODUIT ----------------------
 
 const product = {};
   product["tagIdList"]= TagIdList;
   product["title"] = productInfo.title;
   product["categoryId"] = category._id;
-  product["imageProductUrl"]= "products/"+filename;
+  //product["imageProductUrl"]= "products/"+filename;
+  product["imageProductUrl"] = "velo.jpeg";
   product["description"] = productInfo.description;
   product["price"] = productInfo.price;
   product["quantity"] = productInfo.quantity;

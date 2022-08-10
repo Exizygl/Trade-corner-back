@@ -20,4 +20,4 @@ const fileFilter = (req, file, cb) => {
 
 let uploadProductPhotos = multer({ storage: storage, fileFilter: fileFilter,});
 
-module.exports = uploadProductPhotos.single('photos') // nom de la key où se trouve la photo
+module.exports = uploadProductPhotos.array('photos', 5) // nom de la key où se trouve la photo et maxCount
