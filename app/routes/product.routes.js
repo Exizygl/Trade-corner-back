@@ -49,5 +49,19 @@ router.get("/new", async (req , res) => {
   }
 });
 
+router.get("/:id", async (req , res) => {
+  try {
+   
+    const product= await ProductService.getById(req.params.id);
+    console.log(product);
+    return successCbk(res, 200, { product});
+  } catch (error) {
+
+     return res.status(201).send({error });
+    
+  }
+});
+
+
 
 module.exports = router;
