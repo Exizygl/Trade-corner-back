@@ -10,8 +10,14 @@ const upload = require("../middlewares/upload");
 router.post("/add", hasJWT, upload, async (req, res) => {
     try {
       
-      const user = await ProductService.addProduct(req.body, req.userId);// add product to schema
-      return successCbk(res, 200, { user });
+      const product = await ProductService.addProduct(req.body, req.userId);// add product to schema
+      
+      // const image = await ProductService.uploadImageUser(
+      //   req.file ? req.file.filename : "",
+      //   product._id
+      // );
+      
+      return successCbk(res, 200, { product });
     } catch (error) {
   
       //const errors = productAddErrors(error)
@@ -19,5 +25,43 @@ router.post("/add", hasJWT, upload, async (req, res) => {
       // return res.status(200).send({ errors });
     }
   });
+// Router GET
 
-  module.exports = router;
+router.get("/", async (req , res) => {
+  try {
+    const productList = await ProductService.getAllProducts();
+    return successCbk(res, 200, { productList });
+  } catch (error) {
+
+     return res.status(201).send({error });
+    
+  }
+});
+router.get("/new", async (req , res) => {
+  try {
+    const productList = await ProductService.getNewProducts();
+    console.log(productList);
+    return successCbk(res, 200, { productList });
+  } catch (error) {
+
+     return res.status(201).send({error });
+    
+  }
+});
+
+router.get("/:id", async (req , res) => {
+  try {
+   
+    const product= await ProductService.getById(req.params.id);
+    console.log(product);
+    return successCbk(res, 200, { product});
+  } catch (error) {
+
+     return res.status(201).send({error });
+    
+  }
+});
+
+
+
+module.exports = router;
