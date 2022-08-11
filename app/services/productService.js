@@ -9,11 +9,6 @@ const { signUpTag, addIdProductToTag } = require("./tagService");
 
 const addProduct = async (files, productInfo, userId) => {
 
-  console.log("ça rentre dans les services");
-    console.log("productInfo : " + JSON.stringify(productInfo));
-    console.log("user id : " + userId);
-   console.log("files " + files[0]);
-
   // --------------------- GESTION DES TAGS ----------------------
 
   var stringTag = productInfo.tags;
@@ -27,19 +22,16 @@ const addProduct = async (files, productInfo, userId) => {
   const TagIdList = [];
   for (var i = 0 ; i< TagList.length; i++) TagIdList[i] = TagList[i]._id;
 
-  // console.log ("stringTag : " + stringTag);
-  // console.log ("tagArray : " + TagArray);
-  // console.log ("tagList : " + TagList);
-  // console.log ("tagListId : " + TagIdList);
-
-
+ 
  // --------------------- GESTION DES CATEGORIES ----------------------
 
 const category = await getByCategory(productInfo.category);
 
  // --------------------- GESTION DES IMAGES ----------------------
 
- console.log("filename : " + filename);
+ var imageProductUrl = [];
+ for (i=0; i<files.length; i++)
+ { imageProductUrl.push("products/"+files[i].filename)};
 
  // --------------------- CREATION ET ENREGISTREMENT DU PRODUIT ----------------------
 
@@ -47,16 +39,13 @@ const product = {};
   product["tagIdList"]= TagIdList;
   product["title"] = productInfo.title;
   product["categoryId"] = category._id;
-  //product["imageProductUrl"]= "products/"+filename;
-  product["imageProductUrl"] = "velo.jpeg";
+  product["imageProductUrl"]= imageProductUrl;
   product["description"] = productInfo.description;
   product["price"] = productInfo.price;
   product["quantity"] = productInfo.quantity;
   product["sellerId"] = userId; 
 
   const newProduct = await ProductDAO.addProduct(product);
-  //console.log("new product : " + newProduct);
-  console.log("imageProductUrl : " + filename);
 
 
  // --------------------- AJOUT DU PRODUCTID DANS LES COLLECTIONS TAG ET CATEGORIES ----------------------

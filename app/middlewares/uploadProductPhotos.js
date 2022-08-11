@@ -9,15 +9,16 @@ const storage = multer.diskStorage({
     }
 });  
 
-const fileFilter = (req, file, cb) => {
-    if((file.mimetype).includes('jpeg') || (file.mimetype).includes('png') || (file.mimetype).includes('jpg')){
-        cb(null, true);
-    } else{
-        cb(null, false);
-    }
+// const fileFilter = (req, file, cb) => {
+//     if((file.mimetype).includes('jpeg') || (file.mimetype).includes('png') || (file.mimetype).includes('jpg')){
+//         cb(null, true);
+//     } else{
+//         cb(null, false);
+//     }
 
-};
+// };
 
-let uploadProductPhotos = multer({ storage: storage, fileFilter: fileFilter,});
+//let uploadProductPhotos = multer({ storage: storage, fileFilter: fileFilter,});
+let uploadProductPhotos = multer({ storage: storage});
 
-module.exports = uploadProductPhotos.array('photos', 5) // nom de la key où se trouve la photo et maxCount
+module.exports = uploadProductPhotos.array('photos', 5) // nom de la key où se trouve les photos et maxCount
