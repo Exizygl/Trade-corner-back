@@ -62,6 +62,19 @@ router.get("/:id", async (req , res) => {
   }
 });
 
+router.get("/:search", async (req , res) => {
+  try {
+   
+    const productList= await ProductService.search(req.body);
+    console.log(productList);
+    return successCbk(res, 200, { productList});
+  } catch (error) {
+
+     return res.status(201).send({error });
+    
+  }
+});
+
 
 
 module.exports = router;
