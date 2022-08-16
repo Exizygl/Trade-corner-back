@@ -39,6 +39,7 @@ router.get("/", async (req , res) => {
 });
 router.get("/new", async (req , res) => {
   try {
+    console("toya");
     const productList = await ProductService.getNewProducts();
     console.log(productList);
     return successCbk(res, 200, { productList });
@@ -55,6 +56,20 @@ router.get("/:id", async (req , res) => {
     const product= await ProductService.getById(req.params.id);
     console.log(product);
     return successCbk(res, 200, { product});
+  } catch (error) {
+
+     return res.status(201).send({error });
+    
+  }
+});
+
+
+router.get("/:search", async (req , res) => {
+  try {
+   
+    const productList= await ProductService.search(req.body);
+    console.log(productList);
+    return successCbk(res, 200, { productList});
   } catch (error) {
 
      return res.status(201).send({error });
