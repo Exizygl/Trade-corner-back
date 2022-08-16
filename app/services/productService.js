@@ -100,11 +100,16 @@ const uploadImageUser = async (filename, id) => {
   return await UserDAO.uploadImageUser(newUser);
 };
 
- 
+const search = async (search) => {
+  console.log(search)
+  return await ProductDAO.search(search.bar);
+}
+
 module.exports = {
   addProduct,
   uploadImageUser,
   getAllProducts,
   getById,
-  getNewProducts
+  getNewProducts,
+  search,
 };
