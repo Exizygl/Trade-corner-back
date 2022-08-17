@@ -40,7 +40,7 @@ router.get("/", async (req , res) => {
 });
 router.get("/new", async (req , res) => {
   try {
-    console("toya");
+    console.log("toya");
     const productList = await ProductService.getNewProducts();
     console.log(productList);
     return successCbk(res, 200, { productList });
