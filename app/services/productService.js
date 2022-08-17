@@ -101,10 +101,19 @@ const uploadImageUser = async (filename, id) => {
 };
 
 const search = async (search) => {
+<<<<<<< HEAD
   return await ProductDAO.search(search.bar);
 }
 
  
+=======
+  console.log(typeof search);
+  console.log(search + " here");
+  if (search == "null" || search == "all") search = "" ;
+  return await ProductDAO.search(search);
+}
+
+>>>>>>> search
 module.exports = {
   addProduct,
   uploadImageUser,
