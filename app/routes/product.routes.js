@@ -4,13 +4,16 @@ const { hasJWT } = require("../middlewares/jwt");
 
 const successCbk = require("../misc/callbacks").successCbk;
 const errorCbk = require("../misc/callbacks").errorCbk;
+const uploadProductPhotos = require("../middlewares/uploadProductPhotos");
 const upload = require("../middlewares/upload");
 
 
-router.post("/add", hasJWT, upload, async (req, res) => {
-    try {
-      
-      const product = await ProductService.addProduct(req.body, req.userId);// add product to schema
+
+router.post("/add", hasJWT, uploadProductPhotos, async (req, res) => {
+  console.log("ça rentre dans la route : " );
+   
+  try {
+      const product = await ProductService.addProduct(req.files, req.body, req.userId);// add product to schema
       
       // const image = await ProductService.uploadImageUser(
       //   req.file ? req.file.filename : "",
@@ -20,9 +23,7 @@ router.post("/add", hasJWT, upload, async (req, res) => {
       return successCbk(res, 200, { product });
     } catch (error) {
   
-      //const errors = productAddErrors(error)
-  
-      // return res.status(200).send({ errors });
+      return res.status(201).send(error);
     }
   });
 // Router GET

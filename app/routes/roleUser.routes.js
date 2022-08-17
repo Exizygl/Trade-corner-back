@@ -10,7 +10,7 @@ const upload = require('../middlewares/upload');
 // Router GET
 
 
-router.get('/', hasJWT, upload, async (req, res) => {
+router.get('/', hasJWT, async (req, res) => {
   try {
     const roles = await roleUserService.getAllRoles();
     return successCbk(res, 200, { roles });

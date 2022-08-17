@@ -11,16 +11,16 @@ const productSchema = new mongoose.Schema(
     categoryId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "category",
-      required: true,
+      //required: true,
     },
     tagIdList: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "tag",
-      required: true,
+      //required: true,
     },
     imageProductUrl: {
       type: [String],
-      required: true,
+      //required: true,
       
     },
     description: {

@@ -1,3 +1,4 @@
+const { getByCategory } = require("../daos/categoryDAO");
 const ProductDAO = require("../daos/productDAO");
 const { signUpCategory, addIdProductToCategory } = require("./categoryService");
 const { signUpTag, addIdProductToTag } = require("./tagService");
@@ -5,67 +6,52 @@ const { signUpTag, addIdProductToTag } = require("./tagService");
 
 
 
-const addProduct = async (productInfo2, userId) => {
-  
-  const productInfo = {}
 
-  productInfo.title = "velo électrique";
-  productInfo.category = "velo";
-  productInfo.imageProductUrl= ["velo1.jpg"];
-  productInfo.tag = "velo, électrique, pure";
-  productInfo.description = "ceci est une peluche";
-  productInfo.price = 10;
-  productInfo.quantity = 1;
-  productInfo.sellerId = userId;
-  
-  const product = {}
+const addProduct = async (files, productInfo, userId) => {
 
+  // --------------------- GESTION DES TAGS ----------------------
 
- console.log(productInfo)
-
-
-
-  var stringTag = productInfo.tag;
-  console.log(stringTag)
+  var stringTag = productInfo.tags;
   const TagArray = stringTag.split(",").map(tag => tag.trim());
-  console.log(TagArray)
-  const TagList = [];
-  
-  for (var i = 0 ; i< TagArray.length; i++) TagList[i] = await signUpTag(TagArray[i]);
 
-  console.log(TagList)
+   //On crée les tags si ils n'existe pas, ou on récupére le tag existant si il existe
+  const TagList = []; 
+  for (var i = 0 ; i< TagArray.length; i++) TagList[i] = await signUpTag(TagArray[i]);
   
-  const TagIdList = []
-  
+  // on ne garde que les TagId
+  const TagIdList = [];
   for (var i = 0 ; i< TagList.length; i++) TagIdList[i] = TagList[i]._id;
 
+ 
+ // --------------------- GESTION DES CATEGORIES ----------------------
 
-  const category = {
-    label : productInfo.category
-  }
+const category = await getByCategory(productInfo.category);
 
-  const newCategory = await signUpCategory(category)
+ // --------------------- GESTION DES IMAGES ----------------------
 
-  console.log(newCategory)
+ var imageProductUrl = [];
+ for (i=0; i<files.length; i++)
+ { imageProductUrl.push("products/"+files[i].filename)};
 
+ // --------------------- CREATION ET ENREGISTREMENT DU PRODUIT ----------------------
+
+const product = {};
   product["tagIdList"]= TagIdList;
   product["title"] = productInfo.title;
-  product["categoryId"] = newCategory._id;
-  product["imageProductUrl"]= productInfo.imageProductUrl;
+  product["categoryId"] = category._id;
+  product["imageProductUrl"]= imageProductUrl;
   product["description"] = productInfo.description;
   product["price"] = productInfo.price;
   product["quantity"] = productInfo.quantity;
-  product["sellerId"] = userId;
-
-
-
-
+  product["sellerId"] = userId; 
 
   const newProduct = await ProductDAO.addProduct(product);
 
-  await addIdProductToCategory(newCategory, newProduct);
 
-  for (var i = 0 ; i< TagList.length; i++) await addIdProductToTag(TagList[i], newProduct)
+ // --------------------- AJOUT DU PRODUCTID DANS LES COLLECTIONS TAG ET CATEGORIES ----------------------
+  await addIdProductToCategory(category, newProduct);
+
+  for (var i = 0 ; i< TagList.length; i++) await addIdProductToTag(TagList[i], newProduct);
 
   return newProduct;
 };
