@@ -9,7 +9,8 @@ const getAllProducts = async () => await ProductModel.find().populate('tagIdList
 const getNewProducts = async () => await ProductModel.find().sort({createdAt: -1}).limit(4).populate('tagIdList', 'tag').populate('categoryId', 'label');
 
 const search = async (search) => await ProductModel.find({"title": {
-  "$regex": search
+  "$regex": search,
+  $options:'i'
 }}).populate('tagIdList', 'tag').populate('categoryId', 'label').populate('sellerId', 'pseudo');
 
 module.exports = {
