@@ -86,13 +86,32 @@ const uploadImageUser = async (filename, id) => {
   return await UserDAO.uploadImageUser(newUser);
 };
 
-const search = async (search) => {
-  console.log(typeof search);
-  console.log(search + " here");
-  if (search == "null" || search == "all") search = "" ;
-  return await ProductDAO.search(search);
+const search = async (params) => {
+  
+  var search = params.search;
+  
+  
+  var page = params.page - 1 || 0;
+  console.log(page)
+  var limit = 1
+
+  if (params.search == "null" || params.search == "all") search = "" ;
+  return await ProductDAO.searchPagination(search, page, limit);
+ 
 }
 
+
+const searchCount = async (params) => {
+  console.log(params)
+  var search = params.search;
+  
+  
+  if (params.search == "null" || params.search == "all") search = "" ;
+  var numberProduct = await ProductDAO.search(search);
+  var number = Math.floor(numberProduct.length/1)
+  return number + 1
+
+}
 module.exports = {
   addProduct,
   uploadImageUser,
@@ -100,4 +119,5 @@ module.exports = {
   getById,
   getNewProducts,
   search,
+  searchCount
 };

@@ -63,12 +63,26 @@ router.get("/:id", async (req , res) => {
   }
 });
 
-router.get("/search/:search", async (req , res) => {
+router.get("/search/:search/:page", async (req , res) => {
   try {
-   
-    const productList= await ProductService.search(req.params.search);
+    
+    
+    const productList= await ProductService.search(req.params);
     console.log(productList);
-    return successCbk(res, 200, { productList});
+    return successCbk(res, 200, { productList });
+  } catch (error) {
+
+     return res.status(201).send({error });
+    
+  }
+});
+router.get("/searchCount/:search", async (req , res) => {
+  try {
+    
+    console.log("popo")
+    const number = await ProductService.searchCount(req.params);
+    console.log(number);
+    return successCbk(res, 200, { number });
   } catch (error) {
 
      return res.status(201).send({error });
@@ -77,18 +91,6 @@ router.get("/search/:search", async (req , res) => {
 });
 
 
-router.get("/:search", async (req , res) => {
-  try {
-   
-    const productList= await ProductService.search(req.body);
-    console.log(productList);
-    return successCbk(res, 200, { productList});
-  } catch (error) {
-
-     return res.status(201).send({error });
-    
-  }
-});
 
 
 
