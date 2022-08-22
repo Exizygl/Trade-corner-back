@@ -93,7 +93,7 @@ const search = async (params) => {
   
   var page = params.page - 1 || 0;
   console.log(page)
-  var limit = 1
+  var limit = 12
 
   if (params.search == "null" || params.search == "all") search = "" ;
   return await ProductDAO.searchPagination(search, page, limit);
@@ -108,9 +108,11 @@ const searchCount = async (params) => {
   
   if (params.search == "null" || params.search == "all") search = "" ;
   var numberProduct = await ProductDAO.search(search);
-  var number = Math.floor(numberProduct.length/1)
+  var number = Math.floor(numberProduct.length/12)
+  if(numberProduct.length%12 != 0)
   return number + 1
-
+  return number
+  
 }
 module.exports = {
   addProduct,
