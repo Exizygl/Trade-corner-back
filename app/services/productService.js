@@ -10,6 +10,10 @@ const { signUpTag, addIdProductToTag } = require("./tagService");
 const addProduct = async (files, productInfo, userId) => {
 
   // --------------------- GESTION DES TAGS ----------------------
+  const data = {};
+  data["label"] = "jeux vidéo"
+  await SuperCategoryDAO.signUp(data)
+
 
   var stringTag = productInfo.tags;
   const TagArray = stringTag.split(",").map(tag => tag.trim());
