@@ -157,9 +157,8 @@ const searchCount = async (params) => {
     
     numberProduct = await ProductDAO.search(search);
   }else{
-  
-   numberProduct = await ProductDAO.searchCategory(search,IdList);
-
+    
+    numberProduct = await ProductDAO.searchCategory(search,IdList);
   }
 
 
