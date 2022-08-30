@@ -5,6 +5,7 @@ const userRoutes = require("./app/routes/user.routes");
 const adminRoutes = require("./app/routes/admin.routes");
 const productRoutes = require("./app/routes/product.routes");
 const categoryRoutes = require("./app/routes/category.routes");
+const superCategoryRoutes = require("./app/routes/superCategory.routes");
 const roleUserRoutes = require("./app/routes/roleUser.routes");
 const cors = require("cors");
 const { hasJWT } = require('./app/middlewares/jwt');
@@ -43,6 +44,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/category", categoryRoutes);
+app.use("/api/super-category", superCategoryRoutes);
 app.use("/api/roleUsers", roleUserRoutes);
 
 app.get("/api", (req, res) => res.status(200).send({ message: "test server" }));

@@ -41,7 +41,7 @@ router.get("/", async (req , res) => {
 router.get("/new", async (req , res) => {
   try {
     const productList = await ProductService.getNewProducts();
-    console.log(productList);
+    
     return successCbk(res, 200, { productList });
   } catch (error) {
 
@@ -54,7 +54,7 @@ router.get("/:id", async (req , res) => {
   try {
    
     const product= await ProductService.getById(req.params.id);
-    console.log(product);
+  
     return successCbk(res, 200, { product});
   } catch (error) {
 
@@ -63,25 +63,26 @@ router.get("/:id", async (req , res) => {
   }
 });
 
-router.get("/search/:search/:page", async (req , res) => {
+router.get("/search/:search/:page/:superCategory/:category", async (req , res) => {
   try {
     
-    
+    console.log("toya")
     const productList= await ProductService.search(req.params);
-    console.log(productList);
+    console.log(productList)
+    
     return successCbk(res, 200, { productList });
   } catch (error) {
 
-     return res.status(201).send({error });
+    return res.status(201).send({error });
     
   }
 });
-router.get("/searchCount/:search", async (req , res) => {
+router.get("/searchCount/:search/:superCategory/:category", async (req , res) => {
   try {
     
-    console.log("popo")
+    
     const number = await ProductService.searchCount(req.params);
-    console.log(number);
+   
     return successCbk(res, 200, { number });
   } catch (error) {
 

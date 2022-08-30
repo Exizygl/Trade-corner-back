@@ -10,7 +10,7 @@ const categorySchema = new mongoose.Schema(
         type: [mongoose.Schema.Types.ObjectId],
         ref: "product",
     },
-    superCategorieId: {
+    superCategoryId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "superCategory",
     },

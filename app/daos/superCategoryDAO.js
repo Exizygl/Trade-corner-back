@@ -3,16 +3,13 @@ const ObjectId = require("mongoose").Types.ObjectId;
 
 const signUp = async (category) => await new SuperCategoryModel(category).save();
 
-const getAllSuperCategory = async () => await SuperCategoryModel.find();
+const getAllSuperCategory = async () => await SuperCategoryModel.find().populate("categoryIdList", "label");
 
 const getBySuperCategory = async (label) =>
-    await SuperCategoryModel.findOne({ label: new RegExp("^" + label + "$", "i") });
+    await SuperCategoryModel.findOne({ label: new RegExp("^" + label + "$", "i") })
     
 
-const superCategoryInfoUpdate = async (category) =>
-    await SuperCategoryModel.findOneAndUpdate({ _id: ObjectId(category._id) }, category, {
-        new: true,
-    });
+
 
 
 
@@ -20,6 +17,5 @@ module.exports = {
     signUp,
     getAllSuperCategory,
     getBySuperCategory,
-    superCategoryInfoUpdate,
     
 };
