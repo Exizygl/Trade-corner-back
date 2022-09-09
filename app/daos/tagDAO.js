@@ -12,8 +12,12 @@ const tagInfoUpdate = async (tag) =>
         new: true,
     });
 
+    const getTags = async (labelList) =>
+    await TagModel.find({ label: {"$in": labelList} });
+
 module.exports = {
     signUp,
     getByTag,
     tagInfoUpdate,
+    getTags
 };

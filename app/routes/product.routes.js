@@ -63,12 +63,13 @@ router.get("/:id", async (req , res) => {
   }
 });
 
-router.get("/search/:search/:page/:superCategory/:category", async (req , res) => {
+router.get("/search/:search/:page/:superCategory/:category/:order/:minimun/:maximun", async (req , res) => {
   try {
     
     console.log("toya")
     const productList= await ProductService.search(req.params);
     console.log(productList)
+    console.log("apo")
     
     return successCbk(res, 200, { productList });
   } catch (error) {
@@ -77,7 +78,7 @@ router.get("/search/:search/:page/:superCategory/:category", async (req , res) =
     
   }
 });
-router.get("/searchCount/:search/:superCategory/:category", async (req , res) => {
+router.get("/searchCount/:search/:superCategory/:category/:minimun/:maximun", async (req , res) => {
   try {
     
     

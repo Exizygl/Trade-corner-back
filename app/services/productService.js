@@ -2,6 +2,7 @@ const { getByCategory, getIdByCategory } = require("../daos/categoryDAO");
 
 const ProductDAO = require("../daos/productDAO");
 const { getBySuperCategory } = require("../daos/superCategoryDAO");
+const { getTags } = require("../daos/tagDAO");
 const { signUpCategory, addIdProductToCategory } = require("./categoryService");
 const { signUpTag, addIdProductToTag } = require("./tagService");
 
@@ -90,42 +91,71 @@ const uploadImageUser = async (filename, id) => {
 const search = async (params) => {
 
   console.log(params)
- 
-  var search = params.search;
+
+  var search = [params.search];
 
   var superCategory = params.superCategory
   var category = params.category
+  var order = params.order
+  var minimun = params.minimun * 100
+  var maximun = params.maximun * 100
 
-  var IdList = ""
 
+  var tagIdList = ""
+  var categoryIdList = ""
+  var orderType = ""
+  var orderValue
+  if (order == "new" || order == "old") {
+    orderType = "createdAt"
+
+    if (order == "new") {
+      orderValue = -1
+    }
+    if (order == "old") {
+      orderValue = 1
+    }
+
+  } else {
+    orderType = "price"
+
+    if (order == "cheap") {
+      orderValue = 1
+    }
+    if (order == "expensive") {
+      orderValue = -1
+    }
+  }
+
+  var getTag = await getTags(search)
+  tagIdList = getTag.productIdList
   if (superCategory != "all") {
     var getList = await getBySuperCategory(superCategory);
-    IdList = getList.categoryIdList;
-    
-    
+    categoryIdList = getList.categoryIdList;
+
+
   }
-  
+
   if (category != "all") {
     console.log(category)
     var getList = await getIdByCategory(category);
-    IdList = getList;
+    categoryIdList = getList;
     console.log(IdList)
-    
-    
+
+
   }
   var page = params.page - 1 || 0;
 
   var limit = 12
 
   if (params.search == "null" || params.search == "all") search = "";
-  
 
-  if(IdList == ""){
+
+  if (categoryIdList == "") {
     console.log("here")
-  return await ProductDAO.searchPagination(search, page, limit);
+    return await ProductDAO.searchPagination(search, tagIdList, page, limit, orderType, orderValue, minimun, maximun);
   }
   console.log("there")
-  return await ProductDAO.searchPaginationCategory(search, page, limit, IdList);
+  return await ProductDAO.searchPaginationCategory(search, tagIdList,page, limit, categoryIdList, orderType, orderValue, minimun, maximun);
 
 }
 
@@ -137,32 +167,35 @@ const searchCount = async (params) => {
   var superCategory = params.superCategory
 
   var category = params.category
+  var minimun = params.minimun * 100
+  var maximun = params.maximun * 100
 
   var IdList = ""
 
+
   if (superCategory != "all") {
     var getList = await getBySuperCategory(superCategory);
-    IdList = getList.categoryIdList;  
+    IdList = getList.categoryIdList;
   }
   if (category != "all") {
-    
+
     var getList = await getIdByCategory(category);
     IdList = getList;
-    
+
   }
   var numberProduct = ""
   if (params.search == "null" || params.search == "all") search = "";
 
-  if(IdList == ""){
-    
-    numberProduct = await ProductDAO.search(search);
-  }else{
-    
-    numberProduct = await ProductDAO.searchCategory(search,IdList);
+  if (IdList == "") {
+
+    numberProduct = await ProductDAO.search(search, minimun, maximun);
+  } else {
+
+    numberProduct = await ProductDAO.searchCategory(search, IdList, minimun, maximun);
   }
 
 
- 
+
   var number = Math.floor(numberProduct.length / 12)
   console.log(number)
   if (numberProduct.length % 12 != 0)
