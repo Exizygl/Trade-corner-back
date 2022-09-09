@@ -13,7 +13,7 @@ const tagInfoUpdate = async (tag) =>
     });
 
     const getTags = async (labelList) =>
-    await TagModel.find({ label: {"$in": labelList} });
+    await TagModel.find({ tag: {"$in": labelList} });
 
 module.exports = {
     signUp,

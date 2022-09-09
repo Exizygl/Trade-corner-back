@@ -126,8 +126,10 @@ const search = async (params) => {
     }
   }
 
+  console.log(search)
   var getTag = await getTags(search)
   tagIdList = getTag.productIdList
+  console.log(tagIdList)
   if (superCategory != "all") {
     var getList = await getBySuperCategory(superCategory);
     categoryIdList = getList.categoryIdList;
