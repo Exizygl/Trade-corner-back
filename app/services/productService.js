@@ -100,6 +100,8 @@ const search = async (params) => {
   var minimun = params.minimun * 100
   var maximun = params.maximun * 100
 
+  var IdProduct = await ProductDAO.getByTitle(search)
+  console.log("list " + IdProduct)
 
   var tagIdList = ""
   var categoryIdList = ""
@@ -128,7 +130,7 @@ const search = async (params) => {
 
   console.log(search)
   var getTag = await getTags(search)
-  tagIdList = getTag.productIdList
+  tagIdList = getTag[0].productIdList
   console.log(tagIdList)
   if (superCategory != "all") {
     var getList = await getBySuperCategory(superCategory);
@@ -174,6 +176,7 @@ const searchCount = async (params) => {
 
   var IdList = ""
 
+  
 
   if (superCategory != "all") {
     var getList = await getBySuperCategory(superCategory);
