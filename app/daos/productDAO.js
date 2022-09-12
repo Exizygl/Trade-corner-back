@@ -9,7 +9,7 @@ const getAllProducts = async () => await ProductModel.find().populate('tagIdList
 const getNewProducts = async () => await ProductModel.find().sort({createdAt: -1}).limit(4).populate('tagIdList', 'tag').populate('categoryId', 'label');
 
 const searchPaginationCategory = async (search, tagIdlist, page, limit, categoryIdList, orderType, orderValue, minimun, maximun) => await ProductModel.find({"title": {
-  "$regex": search,
+  "$regex": search[0],
   $options:'i'
     }, "categoryId": {"$in": categoryIdList}, "price": {"$gt": minimun, "$lt": maximun }})
     .sort({[orderType]: orderValue})
@@ -20,7 +20,7 @@ const searchPaginationCategory = async (search, tagIdlist, page, limit, category
     .populate('sellerId', 'pseudo');
 
 const searchPagination = async (search, tagIdList, page, limit,  orderType, orderValue, minimun, maximun) => await ProductModel.find({"title": {
-  "$regex": search,
+  "$regex": search[0],
   $options:'i'
     }, "price": {"$gt": minimun, "$lt": maximun }})
     .sort({[orderType]: orderValue})
