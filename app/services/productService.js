@@ -104,7 +104,7 @@ const search = async (params) => {
 
 
 
-  var tagIdList = ""
+  var tagIdList = []
   var categoryIdList = ""
   var orderType = ""
   var orderValue
@@ -130,14 +130,21 @@ const search = async (params) => {
     }
   }
 
- 
+
   var getTag = await getTags(myRegex)
-  tagIdList = getTag.productIdList
-  console.log(getTag)
+
+  for (var i = 0; i < getTag.length; i++) {
+    for (var y = 0; y < getTag[i].productIdList.length; y++) {
+      console.log(getTag[i])
+      tagIdList.push(getTag[i].productIdList[y])
+    }
+  }
+  console.log(tagIdList)
 
   if (superCategory != "all") {
     var getList = await getBySuperCategory(superCategory);
     categoryIdList = getList.categoryIdList;
+    console.log(categoryIdList)
 
 
   }
@@ -156,14 +163,14 @@ const search = async (params) => {
 
   if (params.search == "null" || params.search == "all") search = "";
 
-  
 
-if (categoryIdList == "") {
+
+  if (categoryIdList == "") {
     console.log("here")
     return await ProductDAO.searchPagination(myRegex, tagIdList, page, limit, orderType, orderValue, minimun, maximun);
   }
   console.log("there")
-  return await ProductDAO.searchPaginationCategory(search, tagIdList,page, limit, categoryIdList, orderType, orderValue, minimun, maximun);
+  return await ProductDAO.searchPaginationCategory(search, tagIdList, page, limit, categoryIdList, orderType, orderValue, minimun, maximun);
 
 }
 
@@ -180,7 +187,7 @@ const searchCount = async (params) => {
 
   var IdList = ""
 
-  
+
 
   if (superCategory != "all") {
     var getList = await getBySuperCategory(superCategory);
