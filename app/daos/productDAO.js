@@ -11,15 +11,12 @@ const getNewProducts = async () => await ProductModel.find().sort({ createdAt: -
 const getByTitle = async (label) =>
     await ProductModel.find({ title: new RegExp(label, "i") })
 
-// const 
+
 const searchPaginationCategory = async (search, tagIdList, page, limit, categoryIdList, orderType, orderValue, minimun, maximun) => await ProductModel.find({
-  "$or": [{
-    "title": {
-      "$in": search,
-      $options: 'i'
-    }
-  }, { "tagIdList": { "$in": tagIdList } }
-  ], "categoryId": { "$in": categoryIdList }, "price": { "$gt": minimun, "$lt": maximun }
+  "title": {
+    "$regex": search,
+    $options: 'i'
+  }, "categoryId": { "$in": categoryIdList }, "price": { "$gt": minimun, "$lt": maximun }
 })
   .sort({ [orderType]: orderValue })
   .skip(page * limit)
@@ -28,16 +25,17 @@ const searchPaginationCategory = async (search, tagIdList, page, limit, category
   .populate('categoryId', 'label')
   .populate('sellerId', 'pseudo');
 
-// const searchPagination = async (search, tagIdList, page, limit,  orderType, orderValue, minimun, maximun) => await ProductModel.find({ $or : [{"title" : {
-//   "$regex": search[0],
-//   $options:'i'}}, {"tagIdList" : {"$in": tagIdList}}
-//     ], "price": {"$gt": minimun, "$lt": maximun }})
-//     .sort({[orderType]: orderValue})
-//     .skip(page * limit)
-//     .limit(limit)
-//     .populate('tagIdList', 'tag')
-//     .populate('categoryId', 'label')
-//     .populate('sellerId', 'pseudo');
+const searchPagination = async (search, tagIdList, page, limit,  orderType, orderValue, minimun, maximun) => await ProductModel.find({
+  "title": {
+    "$regex": search,
+    $options: 'i'
+  }, "price": {"$gt": minimun, "$lt": maximun }})
+    .sort({[orderType]: orderValue})
+    .skip(page * limit)
+    .limit(limit)
+    .populate('tagIdList', 'tag')
+    .populate('categoryId', 'label')
+    .populate('sellerId', 'pseudo');
 
 // const searchPagination = async (search, tagIdList, page, limit, orderType, orderValue, minimun, maximun) => await ProductModel.aggregate().
 
@@ -50,16 +48,16 @@ const searchPaginationCategory = async (search, tagIdList, page, limit, category
 
 
 
-  const searchPagination = async (search, tagIdList, page, limit,  orderType, orderValue, minimun, maximun) => await ProductModel.find({ $or : [
-    {"title" : { "$regex": search[0], $options:'i'}}, 
-    {"tagIdList" : {"$in": tagIdList}}
-  ], "price": {"$gt": minimun, "$lt": maximun }})
-  .sort({[orderType]: orderValue})
-  .skip(page * limit)
-  .limit(limit)
-  .populate('tagIdList', 'tag')
-  .populate('categoryId', 'label')
-  .populate('sellerId', 'pseudo');
+  // const searchPagination = async (search, tagIdList, page, limit,  orderType, orderValue, minimun, maximun) => await ProductModel.find({ $or : [
+  //   {"title" : { "$regex": search[0], $options:'i'}}, 
+  //   // {"tagIdList" : {"$in": tagIdList}}
+  // ], "price": {"$gt": minimun, "$lt": maximun }})
+  // .sort({[orderType]: orderValue})
+  // .skip(page * limit)
+  // .limit(limit)
+  // .populate('tagIdList', 'tag')
+  // .populate('categoryId', 'label')
+  // .populate('sellerId', 'pseudo');
 
 const search = async (search, minimun, maximun) => await ProductModel.find({
   "title": {

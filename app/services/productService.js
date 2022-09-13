@@ -92,7 +92,7 @@ const search = async (params) => {
 
   console.log(params)
 
-  var search = [params.search];
+  var search = params.search;
 
   var superCategory = params.superCategory
   var category = params.category
@@ -100,13 +100,14 @@ const search = async (params) => {
   var minimun = params.minimun * 100
   var maximun = params.maximun * 100
 
-  var IdProduct = await ProductDAO.getByTitle(search)
-  console.log("list " + IdProduct)
+  // var IdProduct = await ProductDAO.getByTitle(search)
+  // console.log("list " + IdProduct)
 
   var tagIdList = ""
   var categoryIdList = ""
   var orderType = ""
   var orderValue
+
   if (order == "new" || order == "old") {
     orderType = "createdAt"
 
@@ -128,10 +129,11 @@ const search = async (params) => {
     }
   }
 
-  console.log(search)
-  var getTag = await getTags(search)
-  tagIdList = getTag[0].productIdList
-  console.log(tagIdList)
+  // console.log(search)
+  // var getTag = await getTags(search)
+  // tagIdList = getTag[0].productIdList
+  // console.log(tagIdList)
+
   if (superCategory != "all") {
     var getList = await getBySuperCategory(superCategory);
     categoryIdList = getList.categoryIdList;
