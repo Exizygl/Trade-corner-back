@@ -92,7 +92,9 @@ const search = async (params) => {
 
   console.log(params)
 
-  var search = params.search;
+  var search = [params.search, "velo", "bak"];
+
+  var myRegex = search.map(function (e) { return new RegExp(e, "i"); });
 
   var superCategory = params.superCategory
   var category = params.category
@@ -100,8 +102,7 @@ const search = async (params) => {
   var minimun = params.minimun * 100
   var maximun = params.maximun * 100
 
-  // var IdProduct = await ProductDAO.getByTitle(search)
-  // console.log("list " + IdProduct)
+
 
   var tagIdList = ""
   var categoryIdList = ""
@@ -129,10 +130,10 @@ const search = async (params) => {
     }
   }
 
-  // console.log(search)
-  // var getTag = await getTags(search)
-  // tagIdList = getTag[0].productIdList
-  // console.log(tagIdList)
+ 
+  var getTag = await getTags(myRegex)
+  tagIdList = getTag.productIdList
+  console.log(getTag)
 
   if (superCategory != "all") {
     var getList = await getBySuperCategory(superCategory);
@@ -155,10 +156,11 @@ const search = async (params) => {
 
   if (params.search == "null" || params.search == "all") search = "";
 
+  
 
-  if (categoryIdList == "") {
+if (categoryIdList == "") {
     console.log("here")
-    return await ProductDAO.searchPagination(search, tagIdList, page, limit, orderType, orderValue, minimun, maximun);
+    return await ProductDAO.searchPagination(myRegex, tagIdList, page, limit, orderType, orderValue, minimun, maximun);
   }
   console.log("there")
   return await ProductDAO.searchPaginationCategory(search, tagIdList,page, limit, categoryIdList, orderType, orderValue, minimun, maximun);

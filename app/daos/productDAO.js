@@ -27,8 +27,7 @@ const searchPaginationCategory = async (search, tagIdList, page, limit, category
 
 const searchPagination = async (search, tagIdList, page, limit,  orderType, orderValue, minimun, maximun) => await ProductModel.find({
   "title": {
-    "$regex": search,
-    $options: 'i'
+    "$in": search,
   }, "price": {"$gt": minimun, "$lt": maximun }})
     .sort({[orderType]: orderValue})
     .skip(page * limit)
