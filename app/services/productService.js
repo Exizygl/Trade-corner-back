@@ -57,35 +57,39 @@ const addProduct = async (files, productInfo, userId) => {
   return newProduct;
 };
 
+const modifyProduct = async(files, productInfo, userId) => {
+  console.log("ça rentre dns la boucle service")
+};
+
 const getById = async (id) => await ProductDAO.getById(id);
 
 const getAllProducts = async () => await ProductDAO.getAllProducts();
 
 const getNewProducts = async () => await ProductDAO.getNewProducts();
 
-const uploadImageUser = async (filename, id) => {
-  const product = await getById(id);
+// const uploadImageUser = async (filename, id) => {
+//   const product = await getById(id);
 
-  if (
-    filename &&
-    user.imageProfilUrl != filename &&
-    user.imageProfilUrl != ""
-  ) {
-    // changing picture
-    const oldImagePath = `./public/${user.imageProfilUrl}`;
-    if (fs.existsSync(oldImagePath)) {
+//   if (
+//     filename &&
+//     user.imageProfilUrl != filename &&
+//     user.imageProfilUrl != ""
+//   ) {
+//     // changing picture
+//     const oldImagePath = `./public/${user.imageProfilUrl}`;
+//     if (fs.existsSync(oldImagePath)) {
 
-      fs.unlinkSync(oldImagePath);
-    }
+//       fs.unlinkSync(oldImagePath);
+//     }
 
-  }
+//   }
 
-  const newUser = Object.assign(user, {
-    imageProfilUrl: filename ? filename : user.imageProfilUrl,
-  });
+//   const newUser = Object.assign(user, {
+//     imageProfilUrl: filename ? filename : user.imageProfilUrl,
+//   });
 
-  return await UserDAO.uploadImageUser(newUser);
-};
+//   return await UserDAO.uploadImageUser(newUser);
+// };
 
 const search = async (params) => {
 
@@ -129,7 +133,6 @@ const search = async (params) => {
 
 }
 
-
 const searchCount = async (params) => {
 
   var search = params.search;
@@ -170,9 +173,10 @@ const searchCount = async (params) => {
   return number
 
 }
+
 module.exports = {
   addProduct,
-  uploadImageUser,
+  modifyProduct,
   getAllProducts,
   getById,
   getNewProducts,

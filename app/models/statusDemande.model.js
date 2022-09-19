@@ -8,11 +8,7 @@ const statusDemandeSchema = new mongoose.Schema(
         type: String,
         lowercase: true,
     },
-    userCommandList: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: "demande",
-        required: true,
-      },
+    
 
   },
   {
@@ -21,5 +17,5 @@ const statusDemandeSchema = new mongoose.Schema(
 );
 
 
-const StatusDemandeModel = mongoose.model("demande", statusDemandeSchema);
+const StatusDemandeModel = mongoose.model("statusDemande", statusDemandeSchema);
 module.exports = StatusDemandeModel;
