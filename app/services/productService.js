@@ -90,19 +90,30 @@ const uploadImageUser = async (filename, id) => {
 
 const search = async (params) => {
 
-  console.log(params)
 
-  var search = [params.search, "velo", "bak"];
 
-  var myRegex = search.map(function (e) { return new RegExp(e, "i"); });
+  if (params.search == "null" || params.search == "all"){ 
+    
+    search = ""
+    var myRegex =  new RegExp("", "i");
+  }else{
+    var search = params.search.split(",").map(tag => tag.trim());
+    if(search[0] == "") search.shift()
+    
+    var myRegex = search.map(function (e) { return new RegExp(e, "i"); });
+  };
+
+ 
+
+
+  
+
 
   var superCategory = params.superCategory
   var category = params.category
   var order = params.order
   var minimun = params.minimun * 100
   var maximun = params.maximun * 100
-
-
 
   var tagIdList = []
   var categoryIdList = ""
@@ -137,9 +148,10 @@ const search = async (params) => {
     for (var y = 0; y < getTag[i].productIdList.length; y++) {
       console.log(getTag[i])
       tagIdList.push(getTag[i].productIdList[y])
+      console.log(typeof getTag[i].productIdList[y])
     }
   }
-  console.log(tagIdList)
+
 
   if (superCategory != "all") {
     var getList = await getBySuperCategory(superCategory);
@@ -153,7 +165,7 @@ const search = async (params) => {
     console.log(category)
     var getList = await getIdByCategory(category);
     categoryIdList = getList;
-    console.log(IdList)
+    console.log(categoryIdList)
 
 
   }
@@ -161,23 +173,29 @@ const search = async (params) => {
 
   var limit = 12
 
-  if (params.search == "null" || params.search == "all") search = "";
-
-
 
   if (categoryIdList == "") {
     console.log("here")
     return await ProductDAO.searchPagination(myRegex, tagIdList, page, limit, orderType, orderValue, minimun, maximun);
   }
   console.log("there")
-  return await ProductDAO.searchPaginationCategory(search, tagIdList, page, limit, categoryIdList, orderType, orderValue, minimun, maximun);
+  return await ProductDAO.searchPaginationCategory(myRegex, tagIdList, page, limit, categoryIdList, orderType, orderValue, minimun, maximun);
 
 }
 
 
 const searchCount = async (params) => {
 
-  var search = params.search;
+  if (params.search == "null" || params.search == "all"){ 
+    
+    search = ""
+    var myRegex =  new RegExp("", "i");
+  }else{
+    var search = params.search.split(",").map(tag => tag.trim());
+    if(search[0] == "") search.shift()
+
+    var myRegex = search.map(function (e) { return new RegExp(e, "i"); });
+  };
 
   var superCategory = params.superCategory
 
@@ -185,9 +203,19 @@ const searchCount = async (params) => {
   var minimun = params.minimun * 100
   var maximun = params.maximun * 100
 
+  var tagIdList = []
+
+  var getTag = await getTags(myRegex)
+
+  for (var i = 0; i < getTag.length; i++) {
+    for (var y = 0; y < getTag[i].productIdList.length; y++) {
+     
+      tagIdList.push(getTag[i].productIdList[y])
+  
+    }
+  }
+
   var IdList = ""
-
-
 
   if (superCategory != "all") {
     var getList = await getBySuperCategory(superCategory);
@@ -204,12 +232,14 @@ const searchCount = async (params) => {
 
   if (IdList == "") {
 
-    numberProduct = await ProductDAO.search(search, minimun, maximun);
+    numberProduct = await ProductDAO.search(myRegex, tagIdList, minimun, maximun);
   } else {
 
-    numberProduct = await ProductDAO.searchCategory(search, IdList, minimun, maximun);
+    numberProduct = await ProductDAO.searchCategory(myRegex, tagIdList, IdList, minimun, maximun);
   }
 
+  // console.log(numberProduct)
+  console.log(numberProduct.length)
 
 
   var number = Math.floor(numberProduct.length / 12)

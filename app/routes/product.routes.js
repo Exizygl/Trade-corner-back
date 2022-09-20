@@ -66,10 +66,11 @@ router.get("/:id", async (req , res) => {
 router.get("/search/:search/:page/:superCategory/:category/:order/:minimun/:maximun", async (req , res) => {
   try {
     
-    console.log("toya")
+    console.log("begin")
     const productList= await ProductService.search(req.params);
-    console.log(productList)
-    console.log("apo")
+    
+    console.log("end " + productList.length)
+    
     
     return successCbk(res, 200, { productList });
   } catch (error) {

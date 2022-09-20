@@ -15,8 +15,8 @@ const getByTitle = async (label) =>
 const searchPaginationCategory = async (search, tagIdList, page, limit, categoryIdList, orderType, orderValue, minimun, maximun) => await ProductModel.find({
   $or :[
     {"title": {"$in": search}},
-    {"tagIdList": {"$in": tagIdList}}
-  ], "categoryId": { "$in": categoryIdList }, "price": { "$gt": minimun, "$lt": maximun }
+    {"_id": {"$in": tagIdList}},
+  ], "categoryId": { "$in": categoryIdList }, "price": { "$gte": minimun, "$lte": maximun }
 })
   .sort({ [orderType]: orderValue })
   .skip(page * limit)
@@ -28,9 +28,9 @@ const searchPaginationCategory = async (search, tagIdList, page, limit, category
 const searchPagination = async (search, tagIdList, page, limit,  orderType, orderValue, minimun, maximun) => await ProductModel.find({
    $or :[
     {"title": {"$in": search}},
-    {"tagIdList": {"$in": tagIdList}}
+    {"_id": {"$in": tagIdList}}
   ],
-    "price": {"$gt": minimun, "$lt": maximun }})
+    "price": {"$gte": minimun, "$lte": maximun }})
     .sort({[orderType]: orderValue})
     .skip(page * limit)
     .limit(limit)
@@ -38,39 +38,20 @@ const searchPagination = async (search, tagIdList, page, limit,  orderType, orde
     .populate('categoryId', 'label')
     .populate('sellerId', 'pseudo');
 
-// const searchPagination = async (search, tagIdList, page, limit, orderType, orderValue, minimun, maximun) => await ProductModel.aggregate().
-
-//   match({
-//     $or: [{ "title": { "$regex": search[0], $options: 'i' } }, { "tagIdList": { "$in": tagIdList } }],
-//     "price": { "$gt": minimun, "$lt": maximun }
-//   })
 
 
 
-
-
-  // const searchPagination = async (search, tagIdList, page, limit,  orderType, orderValue, minimun, maximun) => await ProductModel.find({ $or : [
-  //   {"title" : { "$regex": search[0], $options:'i'}}, 
-  //   // {"tagIdList" : {"$in": tagIdList}}
-  // ], "price": {"$gt": minimun, "$lt": maximun }})
-  // .sort({[orderType]: orderValue})
-  // .skip(page * limit)
-  // .limit(limit)
-  // .populate('tagIdList', 'tag')
-  // .populate('categoryId', 'label')
-  // .populate('sellerId', 'pseudo');
-
-const search = async (search, minimun, maximun) => await ProductModel.find({
-  "title": {
-    "$regex": search,
-    $options: 'i'
-  }, "price": { "$gt": minimun, "$lt": maximun }
+const search = async (search, tagIdList, minimun, maximun) => await ProductModel.find({
+   $or :[
+    {"title": {"$in": search}},
+    {"_id": {"$in": tagIdList}}
+  ], "price": { "$gt": minimun, "$lt": maximun }
 })
-const searchCategory = async (search, IdList, minimun, maximun) => await ProductModel.find({
-  "title": {
-    "$regex": search,
-    $options: 'i'
-  }, "categoryId": { "$in": IdList }, "price": { "$gt": minimun, "$lt": maximun }
+const searchCategory = async (search, tagIdList, IdList, minimun, maximun) => await ProductModel.find({
+  $or :[
+    {"title": {"$in": search}},
+    {"_id": {"$in": tagIdList}}
+  ], "categoryId": { "$in": IdList }, "price": { "$gt": minimun, "$lt": maximun }
 })
 
 module.exports = {
