@@ -6,6 +6,7 @@ const successCbk = require("../misc/callbacks").successCbk;
 const errorCbk = require("../misc/callbacks").errorCbk;
 const uploadProductPhotos = require("../middlewares/uploadProductPhotos");
 const upload = require("../middlewares/upload");
+const { successCbkProduct } = require("../misc/callbacks");
 
 
 
@@ -69,29 +70,21 @@ router.get("/search/:search/:page/:superCategory/:category/:order/:minimun/:maxi
     console.log("begin")
     const productList= await ProductService.search(req.params);
     
-    console.log("end " + productList.length)
+    var number = productList["number"]
+    var list = productList["listProduct"]
+    console.log(number)
+    console.log(list)
     
     
-    return successCbk(res, 200, { productList });
+    return successCbkProduct(res, 200, { number }, { list });
+    
   } catch (error) {
 
     return res.status(201).send({error });
     
   }
 });
-router.get("/searchCount/:search/:superCategory/:category/:minimun/:maximun", async (req , res) => {
-  try {
-    
-    
-    const number = await ProductService.searchCount(req.params);
-   
-    return successCbk(res, 200, { number });
-  } catch (error) {
 
-     return res.status(201).send({error });
-    
-  }
-});
 
 
 

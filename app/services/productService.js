@@ -90,6 +90,11 @@ const uploadImageUser = async (filename, id) => {
 
 const search = async (params) => {
 
+  
+
+  var result = [] 
+  result["number"] = number 
+
 
 
   if (params.search == "null" || params.search == "all"){ 
@@ -176,85 +181,33 @@ const search = async (params) => {
 
   if (categoryIdList == "") {
     console.log("here")
-    return await ProductDAO.searchPagination(myRegex, tagIdList, page, limit, orderType, orderValue, minimun, maximun);
-  }
-  console.log("there")
-  return await ProductDAO.searchPaginationCategory(myRegex, tagIdList, page, limit, categoryIdList, orderType, orderValue, minimun, maximun);
-
-}
-
-
-const searchCount = async (params) => {
-
-  if (params.search == "null" || params.search == "all"){ 
+    var listProduct = await ProductDAO.search(myRegex, tagIdList, orderType, orderValue, minimun, maximun);
     
-    search = ""
-    var myRegex =  new RegExp("", "i");
   }else{
-    var search = params.search.split(",").map(tag => tag.trim());
-    if(search[0] == "") search.shift()
-
-    var myRegex = search.map(function (e) { return new RegExp(e, "i"); });
-  };
-
-  var superCategory = params.superCategory
-
-  var category = params.category
-  var minimun = params.minimun * 100
-  var maximun = params.maximun * 100
-
-  var tagIdList = []
-
-  var getTag = await getTags(myRegex)
-
-  for (var i = 0; i < getTag.length; i++) {
-    for (var y = 0; y < getTag[i].productIdList.length; y++) {
-     
-      tagIdList.push(getTag[i].productIdList[y])
-  
-    }
-  }
-
-  var IdList = ""
-
-  if (superCategory != "all") {
-    var getList = await getBySuperCategory(superCategory);
-    IdList = getList.categoryIdList;
-  }
-  if (category != "all") {
-
-    var getList = await getIdByCategory(category);
-    IdList = getList;
-
-  }
-  var numberProduct = ""
-  if (params.search == "null" || params.search == "all") search = "";
-
-  if (IdList == "") {
-
-    numberProduct = await ProductDAO.search(myRegex, tagIdList, minimun, maximun);
-  } else {
-
-    numberProduct = await ProductDAO.searchCategory(myRegex, tagIdList, IdList, minimun, maximun);
-  }
-
-  // console.log(numberProduct)
-  console.log(numberProduct.length)
-
-
-  var number = Math.floor(numberProduct.length / 12)
-  console.log(number)
-  if (numberProduct.length % 12 != 0)
-    return number + 1
-  return number
+  console.log("there")
+  var listProduct = await ProductDAO.searchCategory(myRegex, tagIdList, categoryIdList, orderType, orderValue, minimun, maximun);
 
 }
+
+  var number = Math.floor(listProduct.length / limit)
+  
+  if (listProduct.length % limit != 0) number = number + 1
+  
+  
+  
+  result["number"] = number 
+  console.log(result)
+  result["listProduct"] = listProduct.slice(page * limit, page * limit + limit)
+  return result
+}
+
+
+
 module.exports = {
   addProduct,
   uploadImageUser,
   getAllProducts,
   getById,
   getNewProducts,
-  search,
-  searchCount
+  search
 };
