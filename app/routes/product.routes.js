@@ -26,6 +26,18 @@ router.post("/add", hasJWT, uploadProductPhotos, async (req, res) => {
       return res.status(201).send(error);
     }
   });
+
+router.put("/modify", hasJWT, uploadProductPhotos, async (req, res) => {
+    console.log("ça rentre dans la route modify" );     
+    try {
+        const product = await ProductService.modifyProduct(req.files, req.body, req.userId);
+        return successCbk(res, 200, { product });
+      } catch (error) {
+    
+        return res.status(201).send(error);
+      }
+    });  
+
 // Router GET
 
 router.get("/", async (req , res) => {

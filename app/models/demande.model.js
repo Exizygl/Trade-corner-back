@@ -12,13 +12,17 @@ const demandeSchema = new mongoose.Schema(
             ref: "user",
         },
         copieCNIUrl: {
-            type: string,
+            type: [string],
             required: true,
         },
         status: {
-            type: string,
-            default: false
+            type : mongoose.Schema.Types.ObjectId,
+            ref:"statusDemande",
+
         },
+        message : {
+            type: string,
+        }
     },
     {
         timestamps: true,
