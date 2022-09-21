@@ -7,24 +7,20 @@ const { signUpCategory, addIdProductToCategory } = require("./categoryService");
 const { signUpTag, addIdProductToTag } = require("./tagService");
 
 
-
-
-
 const addProduct = async (files, productInfo, userId) => {
-
   // --------------------- GESTION DES TAGS ----------------------
 
   var stringTag = productInfo.tags;
-  const TagArray = stringTag.split(",").map(tag => tag.trim());
+  const TagArray = stringTag.split(',').map((tag) => tag.trim());
 
   //On crée les tags si ils n'existe pas, ou on récupére le tag existant si il existe
   const TagList = [];
-  for (var i = 0; i < TagArray.length; i++) TagList[i] = await signUpTag(TagArray[i]);
+  for (var i = 0; i < TagArray.length; i++)
+    TagList[i] = await signUpTag(TagArray[i]);
 
   // on ne garde que les TagId
   const TagIdList = [];
   for (var i = 0; i < TagList.length; i++) TagIdList[i] = TagList[i]._id;
-
 
   // --------------------- GESTION DES CATEGORIES ----------------------
 
@@ -33,27 +29,29 @@ const addProduct = async (files, productInfo, userId) => {
   // --------------------- GESTION DES IMAGES ----------------------
 
   var imageProductUrl = [];
-  for (i = 0; i < files.length; i++) { imageProductUrl.push("products/" + files[i].filename) };
+  for (i = 0; i < files.length; i++) {
+    imageProductUrl.push('products/' + files[i].filename);
+  }
 
   // --------------------- CREATION ET ENREGISTREMENT DU PRODUIT ----------------------
 
   const product = {};
-  product["tagIdList"] = TagIdList;
-  product["title"] = productInfo.title;
-  product["categoryId"] = category._id;
-  product["imageProductUrl"] = imageProductUrl;
-  product["description"] = productInfo.description;
-  product["price"] = productInfo.price;
-  product["quantity"] = productInfo.quantity;
-  product["sellerId"] = userId;
+  product['tagIdList'] = TagIdList;
+  product['title'] = productInfo.title;
+  product['categoryId'] = category._id;
+  product['imageProductUrl'] = imageProductUrl;
+  product['description'] = productInfo.description;
+  product['price'] = productInfo.price;
+  product['quantity'] = productInfo.quantity;
+  product['sellerId'] = userId;
 
   const newProduct = await ProductDAO.addProduct(product);
-
 
   // --------------------- AJOUT DU PRODUCTID DANS LES COLLECTIONS TAG ET CATEGORIES ----------------------
   await addIdProductToCategory(category, newProduct);
 
-  for (var i = 0; i < TagList.length; i++) await addIdProductToTag(TagList[i], newProduct);
+  for (var i = 0; i < TagList.length; i++)
+    await addIdProductToTag(TagList[i], newProduct);
 
   return newProduct;
 };
@@ -61,6 +59,7 @@ const addProduct = async (files, productInfo, userId) => {
 const modifyProduct = async(files, productInfo, userId) => {
   console.log("ça rentre dns la boucle service")
 };
+const getProductsFrom = async (id) => await ProductDAO.getProductsFrom(id);
 
 const getById = async (id) => await ProductDAO.getById(id);
 
@@ -68,38 +67,10 @@ const getAllProducts = async () => await ProductDAO.getAllProducts();
 
 const getNewProducts = async () => await ProductDAO.getNewProducts();
 
-// const uploadImageUser = async (filename, id) => {
-//   const product = await getById(id);
-
-//   if (
-//     filename &&
-//     user.imageProfilUrl != filename &&
-//     user.imageProfilUrl != ""
-//   ) {
-//     // changing picture
-//     const oldImagePath = `./public/${user.imageProfilUrl}`;
-//     if (fs.existsSync(oldImagePath)) {
-
-//       fs.unlinkSync(oldImagePath);
-//     }
-
-//   }
-
-//   const newUser = Object.assign(user, {
-//     imageProfilUrl: filename ? filename : user.imageProfilUrl,
-//   });
-
-//   return await UserDAO.uploadImageUser(newUser);
-// };
-
 const search = async (params) => {
-
-  
+  console.log(params);
 
   var result = [] 
-  result["number"] = number 
-
-
 
   if (params.search == "null" || params.search == "all"){ 
     
@@ -111,12 +82,6 @@ const search = async (params) => {
     
     var myRegex = search.map(function (e) { return new RegExp(e, "i"); });
   };
-
- 
-
-
-  
-
 
   var superCategory = params.superCategory
   var category = params.category
@@ -162,7 +127,7 @@ const search = async (params) => {
   }
 
 
-  if (superCategory != "all") {
+  if (superCategory != 'all') {
     var getList = await getBySuperCategory(superCategory);
     categoryIdList = getList.categoryIdList;
     console.log(categoryIdList)
@@ -180,7 +145,7 @@ const search = async (params) => {
   }
   var page = params.page - 1 || 0;
 
-  var limit = 12
+  var limit = 12;
 
 
   if (categoryIdList == "") {
@@ -213,5 +178,6 @@ module.exports = {
   getAllProducts,
   getById,
   getNewProducts,
-  search
+  search,
+  getProductsFrom,
 };
