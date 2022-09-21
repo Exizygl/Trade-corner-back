@@ -193,52 +193,6 @@ const search = async (params) => {
 
 }
 
-<<<<<<< HEAD
-const searchCount = async (params) => {
-
-  var search = params.search;
-
-  var superCategory = params.superCategory
-
-  var category = params.category
-  var minimun = params.minimun * 100
-  var maximun = params.maximun * 100
-
-  var IdList = ""
-
-
-  if (superCategory != "all") {
-    var getList = await getBySuperCategory(superCategory);
-    IdList = getList.categoryIdList;
-  }
-  if (category != "all") {
-
-    var getList = await getIdByCategory(category);
-    IdList = getList;
-
-  }
-  var numberProduct = ""
-  if (params.search == "null" || params.search == "all") search = "";
-
-  if (IdList == "") {
-
-    numberProduct = await ProductDAO.search(search, minimun, maximun);
-  } else {
-
-    numberProduct = await ProductDAO.searchCategory(search, IdList, minimun, maximun);
-  }
-
-
-
-  var number = Math.floor(numberProduct.length / 12)
-  console.log(number)
-  if (numberProduct.length % 12 != 0)
-    return number + 1
-  return number
-
-}
-
-=======
   var number = Math.floor(listProduct.length / limit)
   
   if (listProduct.length % limit != 0) number = number + 1
@@ -253,7 +207,6 @@ const searchCount = async (params) => {
 
 
 
->>>>>>> opti
 module.exports = {
   addProduct,
   modifyProduct,
