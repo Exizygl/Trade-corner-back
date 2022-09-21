@@ -94,9 +94,29 @@ const getNewProducts = async () => await ProductDAO.getNewProducts();
 
 const search = async (params) => {
 
-  console.log(params)
+  
 
-  var search = [params.search];
+  var result = [] 
+  result["number"] = number 
+
+
+
+  if (params.search == "null" || params.search == "all"){ 
+    
+    search = ""
+    var myRegex =  new RegExp("", "i");
+  }else{
+    var search = params.search.split(",").map(tag => tag.trim());
+    if(search[0] == "") search.shift()
+    
+    var myRegex = search.map(function (e) { return new RegExp(e, "i"); });
+  };
+
+ 
+
+
+  
+
 
   var superCategory = params.superCategory
   var category = params.category
@@ -104,11 +124,11 @@ const search = async (params) => {
   var minimun = params.minimun * 100
   var maximun = params.maximun * 100
 
-
-  var tagIdList = ""
+  var tagIdList = []
   var categoryIdList = ""
   var orderType = ""
   var orderValue
+
   if (order == "new" || order == "old") {
     orderType = "createdAt"
 
@@ -130,11 +150,22 @@ const search = async (params) => {
     }
   }
 
-  var getTag = await getTags(search)
-  tagIdList = getTag.productIdList
+
+  var getTag = await getTags(myRegex)
+
+  for (var i = 0; i < getTag.length; i++) {
+    for (var y = 0; y < getTag[i].productIdList.length; y++) {
+      console.log(getTag[i])
+      tagIdList.push(getTag[i].productIdList[y])
+      console.log(typeof getTag[i].productIdList[y])
+    }
+  }
+
+
   if (superCategory != "all") {
     var getList = await getBySuperCategory(superCategory);
     categoryIdList = getList.categoryIdList;
+    console.log(categoryIdList)
 
 
   }
@@ -143,7 +174,7 @@ const search = async (params) => {
     console.log(category)
     var getList = await getIdByCategory(category);
     categoryIdList = getList;
-    console.log(IdList)
+    console.log(categoryIdList)
 
 
   }
@@ -151,18 +182,18 @@ const search = async (params) => {
 
   var limit = 12
 
-  if (params.search == "null" || params.search == "all") search = "";
-
 
   if (categoryIdList == "") {
     console.log("here")
-    return await ProductDAO.searchPagination(search, tagIdList, page, limit, orderType, orderValue, minimun, maximun);
-  }
+    var listProduct = await ProductDAO.search(myRegex, tagIdList, orderType, orderValue, minimun, maximun);
+    
+  }else{
   console.log("there")
-  return await ProductDAO.searchPaginationCategory(search, tagIdList,page, limit, categoryIdList, orderType, orderValue, minimun, maximun);
+  var listProduct = await ProductDAO.searchCategory(myRegex, tagIdList, categoryIdList, orderType, orderValue, minimun, maximun);
 
 }
 
+<<<<<<< HEAD
 const searchCount = async (params) => {
 
   var search = params.search;
@@ -207,12 +238,27 @@ const searchCount = async (params) => {
 
 }
 
+=======
+  var number = Math.floor(listProduct.length / limit)
+  
+  if (listProduct.length % limit != 0) number = number + 1
+  
+  
+  
+  result["number"] = number 
+  console.log(result)
+  result["listProduct"] = listProduct.slice(page * limit, page * limit + limit)
+  return result
+}
+
+
+
+>>>>>>> opti
 module.exports = {
   addProduct,
   modifyProduct,
   getAllProducts,
   getById,
   getNewProducts,
-  search,
-  searchCount
+  search
 };

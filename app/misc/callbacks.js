@@ -6,6 +6,14 @@ const successCbk = (res, status, data) => {
     });
 };
 
+const successCbkProduct = (res, status, number, list) => {
+    res.status(status).json({
+        success: true,
+        number: number,
+        list: list
+    });
+};
+
 const errorCbk = (res, status, data) => {
     res.status(status).json({
         success: false,
@@ -16,5 +24,6 @@ const errorCbk = (res, status, data) => {
 
 module.exports = {
     successCbk,
-    errorCbk
+    successCbkProduct,
+    errorCbk,
 };
