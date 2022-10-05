@@ -56,32 +56,43 @@ const addProduct = async (files, productInfo, userId) => {
   return newProduct;
 };
 
-const modifyProduct = async(files, productInfo, userId) => {
+const modifyProduct = async (files, productInfo, userId) => {
   console.log("ça rentre dns la boucle service")
 };
 const getProductsFrom = async (id) => await ProductDAO.getProductsFrom(id);
 
 const getById = async (id) => await ProductDAO.getById(id);
 
+const getListId = async (id) => {
+  console.log(id)
+  var search = id.split(",").map(id => id.trim());
+  console.log(search)
+
+  return await ProductDAO.getListId(search);
+}
+
 const getAllProducts = async () => await ProductDAO.getAllProducts();
 
 const getNewProducts = async () => await ProductDAO.getNewProducts();
 
+
+
 const search = async (params) => {
-  console.log(params);
 
-  var result = [] 
 
-  if (params.search == "null" || params.search == "all"){ 
-    
-    search = ""
-    var myRegex =  new RegExp("", "i");
-  }else{
+  var result = []
+
+  //--------------------------création des Regular expression------------------------------
+  if (params.search == "null" || params.search == "all") {
+
+    var myRegex = new RegExp("", "i");
+  } else {
     var search = params.search.split(",").map(tag => tag.trim());
-    if(search[0] == "") search.shift()
-    
+    if (search[0] == "") search.shift()
+
     var myRegex = search.map(function (e) { return new RegExp(e, "i"); });
   };
+
 
   var superCategory = params.superCategory
   var category = params.category
@@ -94,6 +105,7 @@ const search = async (params) => {
   var orderType = ""
   var orderValue
 
+  //-------------------préparation des variables pour l'ordre des produits---------------------- 
   if (order == "new" || order == "old") {
     orderType = "createdAt"
 
@@ -115,57 +127,57 @@ const search = async (params) => {
     }
   }
 
-
+  //----------------------------Recherche Id des produits ayant les tags envoyés-------------------------------
   var getTag = await getTags(myRegex)
 
   for (var i = 0; i < getTag.length; i++) {
     for (var y = 0; y < getTag[i].productIdList.length; y++) {
-      console.log(getTag[i])
+
       tagIdList.push(getTag[i].productIdList[y])
-      console.log(typeof getTag[i].productIdList[y])
+
     }
   }
 
-
+  //---------------------------Recherche Id des sous categories des produits---------------------------------
   if (superCategory != 'all') {
     var getList = await getBySuperCategory(superCategory);
     categoryIdList = getList.categoryIdList;
-    console.log(categoryIdList)
+
 
 
   }
 
   if (category != "all") {
-    console.log(category)
     var getList = await getIdByCategory(category);
     categoryIdList = getList;
-    console.log(categoryIdList)
+  }
 
+
+
+
+  if (categoryIdList == "") {
+
+    var listProduct = await ProductDAO.search(myRegex, tagIdList, orderType, orderValue, minimun, maximun);
+
+  } else {
+
+    var listProduct = await ProductDAO.searchCategory(myRegex, tagIdList, categoryIdList, orderType, orderValue, minimun, maximun);
 
   }
+
+  //-----------------------------Selection des produits---------------------------
   var page = params.page - 1 || 0;
 
   var limit = 12;
 
-
-  if (categoryIdList == "") {
-    console.log("here")
-    var listProduct = await ProductDAO.search(myRegex, tagIdList, orderType, orderValue, minimun, maximun);
-    
-  }else{
-  console.log("there")
-  var listProduct = await ProductDAO.searchCategory(myRegex, tagIdList, categoryIdList, orderType, orderValue, minimun, maximun);
-
-}
-
   var number = Math.floor(listProduct.length / limit)
-  
+
   if (listProduct.length % limit != 0) number = number + 1
-  
-  
-  
-  result["number"] = number 
-  console.log(result)
+
+
+
+  result["number"] = number
+
   result["listProduct"] = listProduct.slice(page * limit, page * limit + limit)
   return result
 }
@@ -180,4 +192,5 @@ module.exports = {
   getNewProducts,
   search,
   getProductsFrom,
+  getListId 
 };

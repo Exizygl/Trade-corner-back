@@ -12,7 +12,7 @@ const demandeSchema = new mongoose.Schema(
             ref: "user",
         },
         copieCNIUrl: {
-            type: [string],
+            type: [String],
             required: true,
         },
         status: {

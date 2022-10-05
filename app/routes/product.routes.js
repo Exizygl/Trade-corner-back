@@ -14,7 +14,7 @@ router.post('/add', hasJWT, uploadProductPhotos, async (req, res) => {
   try {
       const product = await ProductService.addProduct(req.files, req.body, req.userId);// add product to schema
       
-      // const image = await ProductService.uploadImageUser(
+      //  const image = await ProductService.uploadImageUser(
       //   req.file ? req.file.filename : "",
       //   product._id
       // );
@@ -70,14 +70,11 @@ router.get('/:id', async (req, res) => {
 router.get("/search/:search/:page/:superCategory/:category/:order/:minimun/:maximun", async (req , res) => {
   try {
     
-    console.log("begin")
     const productList= await ProductService.search(req.params);
     
     var number = productList["number"]
     var list = productList["listProduct"]
-    console.log(number)
-    console.log(list)
-    
+
     
     return successCbkProduct(res, 200, { number }, { list });
     
@@ -91,6 +88,17 @@ router.get("/search/:search/:page/:superCategory/:category/:order/:minimun/:maxi
 router.get('/user/:id', async (req, res) => {
   try {
     const productList = await ProductService.getProductsFrom(req.params.id);
+    console.log(productList);
+    return successCbk(res, 200, { productList });
+  } catch (error) {
+    return res.status(201).send({ error });
+  }
+});
+
+router.get('/list/:id', async (req, res) => {
+  try {
+    console.log("poya")
+    const productList = await ProductService.getListId(req.params.id);
     console.log(productList);
     return successCbk(res, 200, { productList });
   } catch (error) {

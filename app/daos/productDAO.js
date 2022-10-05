@@ -8,6 +8,12 @@ const getById = async (id) =>
     .populate('categoryId', 'label')
     .populate('sellerId', 'pseudo');
 
+const getListId = async (id) =>
+  await ProductModel.find({_id: {"$in": id}})
+    .populate('tagIdList', 'tag')
+    .populate('categoryId', 'label')
+    .populate('sellerId', 'pseudo');
+
 const getAllProducts = async () =>
   await ProductModel.find()
     .populate('tagIdList', 'tag')
@@ -26,8 +32,11 @@ const getProductsFrom = async (id) =>
 const searchCategory = async (search, tagIdList, categoryIdList, orderType, orderValue, minimun, maximun) => await ProductModel.find({
   $or :[
     {"title": {"$in": search}},
+    {"description": {"$in": search}},
     {"_id": {"$in": tagIdList}},
-  ], "categoryId": { "$in": categoryIdList }, "price": { "$gte": minimun, "$lte": maximun }
+  ], 
+  "categoryId": { "$in": categoryIdList }
+  , "price": { "$gte": minimun, "$lte": maximun }
 })
   .sort({ [orderType]: orderValue })
   .populate('tagIdList', 'tag')
@@ -37,6 +46,7 @@ const searchCategory = async (search, tagIdList, categoryIdList, orderType, orde
 const search = async (search, tagIdList,  orderType, orderValue, minimun, maximun) => await ProductModel.find({
    $or :[
     {"title": {"$in": search}},
+    {"description": {"$in": search}},
     {"_id": {"$in": tagIdList}}
   ],
     "price": {"$gte": minimun, "$lte": maximun }})
@@ -58,4 +68,5 @@ module.exports = {
   searchCategory,
   getByTitle,
   getProductsFrom,
+  getListId
 };
