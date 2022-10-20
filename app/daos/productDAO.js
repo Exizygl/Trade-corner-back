@@ -49,11 +49,10 @@ const searchCategory = async (search, tagIdList, categoryIdList, orderType, orde
   $or: [
     { "title": { "$in": search } },
     { "description": { "$in": search } },
-    { "_id": { "$in": tagIdList } },
-    {
-      archive : false
-      }
+    { "_id": { "$in": tagIdList } }
   ],
+    archive : false
+  ,
   "categoryId": { "$in": categoryIdList }
   , "price": { "$gte": minimun, "$lte": maximun }
 })
@@ -67,10 +66,8 @@ const search = async (search, tagIdList, orderType, orderValue, minimun, maximun
     { "title": { "$in": search } },
     { "description": { "$in": search } },
     { "_id": { "$in": tagIdList } },
-    {
-      archive : false
-      }
   ],
+    archive : false,
   "price": { "$gte": minimun, "$lte": maximun }
 })
   .sort({ [orderType]: orderValue })
