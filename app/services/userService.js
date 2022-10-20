@@ -12,6 +12,8 @@ const {
 } = require("./adressService");
 const { addRole } = require("../daos/roleUserDAO");
 const { getByLabel, addIdUserToRole, removeId } = require("./roleUserService");
+const { getProductsFrom } = require("../daos/productDAO");
+const { deleteProduct } = require("./productService");
 
 // ======= INSCRIPTION ========= //
 
@@ -238,6 +240,17 @@ const userSoftDelete = async (userInfo, userId) => {
   user["password"] = "delete";
   user["isValid"] = false;
   user["archive"] = true;
+
+
+  var listProduct = await getProductsFrom(userId)
+
+  for (var i = 0; i < listProduct.length; i++) {
+    const product = listProduct[i];
+
+    deleteProduct(product)
+    
+  }
+
 
   return await UserDAO.userInfoUpdate(user);
 };

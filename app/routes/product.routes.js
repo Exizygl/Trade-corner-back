@@ -29,7 +29,20 @@ router.post('/add', hasJWT, uploadProductPhotos, async (req, res) => {
 router.put("/modify", hasJWT, uploadProductPhotos, async (req, res) => {
     console.log("ça rentre dans la route modify" );     
     try {
+      console.log(req.body)
         const product = await ProductService.modifyProduct(req.files, req.body, req.userId);
+        return successCbk(res, 200, { product });
+      } catch (error) {
+    
+        return res.status(201).send(error);
+      }
+    });  
+
+router.put("/delete", hasJWT, uploadProductPhotos, async (req, res) => {
+    console.log("ça rentre dans la route delete" );     
+    try {
+      console.log(req.body.productId)
+        const product = await ProductService.deleteProduct(req.body.productId);
         return successCbk(res, 200, { product });
       } catch (error) {
     
@@ -85,11 +98,14 @@ router.get("/search/:search/:page/:superCategory/:category/:order/:minimun/:maxi
   }
 });
 
-router.get('/user/:id', async (req, res) => {
+router.get('/user/:id/:page', async (req, res) => {
   try {
-    const productList = await ProductService.getProductsFrom(req.params.id);
-    console.log(productList);
-    return successCbk(res, 200, { productList });
+    const productList = await ProductService.getProductsFrom(req.params.id, req.params.page);
+    var number = productList["number"]
+    var list = productList["listProduct"]
+    
+    
+    return successCbkProduct(res, 200, { number }, { list });
   } catch (error) {
     return res.status(201).send({ error });
   }

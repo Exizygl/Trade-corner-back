@@ -2,9 +2,10 @@ const { getByCategory, getIdByCategory } = require("../daos/categoryDAO");
 
 const ProductDAO = require("../daos/productDAO");
 const { getBySuperCategory } = require("../daos/superCategoryDAO");
-const { getTags } = require("../daos/tagDAO");
+const { getTags, getByTag } = require("../daos/tagDAO");
 const { signUpCategory, addIdProductToCategory } = require("./categoryService");
-const { signUpTag, addIdProductToTag } = require("./tagService");
+const { signUpTag, addIdProductToTag, deleteTag } = require("./tagService");
+const fs = require("fs");
 
 
 const addProduct = async (files, productInfo, userId) => {
@@ -58,8 +59,176 @@ const addProduct = async (files, productInfo, userId) => {
 
 const modifyProduct = async (files, productInfo, userId) => {
   console.log("ça rentre dns la boucle service")
+  var productSearch = await ProductDAO.getById(productInfo.id)
+
+  var stringTag = productInfo.tags;
+  const TagArray = stringTag.split(',').map((tag) => tag.trim());
+
+  oldTag = productSearch.tagIdList
+
+  var oldTagList = []
+  const product = {};
+  console.log(oldTag.length)
+  //remove tag
+  for (var i = 0; i < oldTag.length; i++) {
+    tag = oldTag[i].tag
+
+    oldTagList.push(tag)
+    if (!TagArray.includes(tag)) {
+
+      await deleteTag(tag, productInfo.id)
+    }
+
+  }
+
+  console.log(TagArray.length)
+
+  // add Tag
+  for (var i = 0; i < TagArray.length; i++) {
+    tag = TagArray[i]
+    console.log(tag)
+    if (tag != "") {
+      if (!oldTagList.includes(tag)) {
+        console.log(tag)
+        var objectTag = await signUpTag(tag, productInfo.id)
+        await addIdProductToTag(objectTag, productSearch)
+
+      }
+    }
+    console.log("ned")
+
+  }
+
+  //get Tag
+
+
+  var objectsTags = await getTags(TagArray)
+  console.log(objectsTags)
+  // on ne garde que les TagId
+  const TagIdList = [];
+  for (var i = 0; i < objectsTags.length; i++) TagIdList[i] = objectsTags[i]._id;
+
+console.log(productInfo.category)
+console.log(productSearch.categoryId.label)
+
+  if (productInfo.category != productSearch.categoryId.label) {
+    var category = []
+    category['label'] = productInfo.category
+    var objectCategory = await signUpCategory(category)
+    console.log(objectCategory)
+    await addIdProductToCategory(objectCategory, productSearch)
+    product['categoryId'] = objectCategory._id;
+
+  }
+ console.log(productInfo.imageProductUrl)
+ const imageArray = productInfo.imageProductUrl.split(',').map((tag) => tag.trim());
+  var imageProductUrl =  imageArray.filter(e =>  e);
+  console.log(imageProductUrl)
+  for (i = 0; i < files.length; i++) {
+    imageProductUrl.push('products/' + files[i].filename);
+  }
+  console.log(imageProductUrl)
+
+  for (let i = 0; i < imageProductUrl.length; i++) {
+
+
+    const image = imageProductUrl[i];
+
+    console.log(image)
+
+    if (!imageProductUrl.includes(image)) {
+
+
+
+      const imagePath = `./public/${image}`;
+      console.log(imagePath)
+
+
+      if (fs.existsSync(imagePath)) {
+
+        fs.unlinkSync(imagePath);
+      }
+    }
+  }
+  console.log("here")
+  product['_id'] = productSearch._id
+  product['tagIdList'] = TagIdList;
+  product['title'] = productInfo.title;
+  product['imageProductUrl'] = imageProductUrl;
+  product['description'] = productInfo.description;
+  product['price'] = productInfo.price;
+  product['quantity'] = productInfo.quantity;
+  console.log(product)
+
+
+
+  return await ProductDAO.productInfoUpdate(product)
+
+
 };
-const getProductsFrom = async (id) => await ProductDAO.getProductsFrom(id);
+
+const deleteProduct = async (productId) => {
+
+  console.log(productId)
+  var productSearch = await ProductDAO.getById(productId)
+
+  console.log(productSearch.imageProductUrl.length)
+
+  for (let i = 0; i < productSearch.imageProductUrl.length; i++) {
+
+
+    const image = productSearch.imageProductUrl[i];
+
+    console.log('here')
+
+    const imagePath = `./public/${image}`;
+    console.log(imagePath)
+
+
+    if (fs.existsSync(imagePath)) {
+
+      fs.unlinkSync(imagePath);
+    }
+  }
+  var product = {};
+
+  product['title'] = 'delete';
+  product['_id'] = productSearch["_id"];
+  product['archive'] = true;
+
+  product['imageProductUrl'] = ['delete'];
+  product['description'] = 'delete';
+  product['price'] = 0
+  product['quantity'] = 0
+
+
+
+
+  return await ProductDAO.productInfoUpdate(product);
+
+}
+
+const getProductsFrom = async (id, page) => {
+  var listProduct = await ProductDAO.getProductsFrom(id)
+
+  
+  var page = page - 1 || 0;
+  console.log("toya")
+  var limit = 12;
+  console.log("toya")
+  var number = Math.floor(listProduct.length / limit)
+
+  if (listProduct.length % limit != 0) number = number + 1
+
+  var result = []
+
+  console.log("toya")
+  result["number"] = number
+
+  result["listProduct"] = listProduct.slice(page * limit, page * limit + limit)
+  console.log(result)
+  return result
+};
 
 const getById = async (id) => await ProductDAO.getById(id);
 
@@ -70,6 +239,8 @@ const getListId = async (id) => {
 
   return await ProductDAO.getListId(search);
 }
+
+
 
 const getAllProducts = async () => await ProductDAO.getAllProducts();
 
@@ -192,5 +363,6 @@ module.exports = {
   getNewProducts,
   search,
   getProductsFrom,
-  getListId 
+  getListId,
+  deleteProduct
 };

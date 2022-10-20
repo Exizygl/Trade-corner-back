@@ -17,9 +17,20 @@ const addIdProductToTag = async (tag, product) => {
 };
 
 
+const deleteTag = async (tag, id) => {
+    var objectTag = await TagDAO.getByTag(tag)
+    console.log(objectTag)
+    objectTag.productIdList.pull(id);
+    
+    if (!objectTag.productIdList[0]) return await TagDAO.deleteTag(objectTag);
+    return await TagDAO.tagInfoUpdate(objectTag);
+};
+
+
 module.exports = {
     signUpTag,
     addIdProductToTag,
+    deleteTag
     
   };
   

@@ -18,11 +18,17 @@ const getAllCategory = async () => {
     return await CategoryDAO.getAllCategory();
 };
 
+const removeCategory = async (label, id) => {
+    var objectCategory = await TagDAO.getByCategory(label)
+    objectCategory.productIdList.pull(id);
+    return await TagDAO.tagInfoUpdate(objectCategory);
+};
 
 module.exports = {
     signUpCategory,
     addIdProductToCategory,
     getAllCategory,
+    removeCategory
     
   };
   
