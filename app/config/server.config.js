@@ -8,7 +8,7 @@ module.exports = {
 mongoose.connect(
   "mongodb+srv://" +
     process.env.DB_USER_PASS +
-    "@cluster0.kaa7z.mongodb.net/E-Commerce",
+    "@cluster0.u0yygyt.mongodb.net/e-commerce",
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
