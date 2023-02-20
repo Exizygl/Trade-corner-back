@@ -63,7 +63,7 @@ router.get('/', async (req, res) => {
 router.get('/new', async (req, res) => {
   try {
     const productList = await ProductService.getNewProducts();
-
+    console.log(productList)
     return successCbk(res, 200, { productList });
   } catch (error) {
     return res.status(201).send({ error });
