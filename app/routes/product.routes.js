@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const ProductService = require('../services/productService');
 const { hasJWT } = require('../middlewares/jwt');
-
+const TransporteurService = require('../services/TransporteurService')
 const successCbk = require("../misc/callbacks").successCbk;
 const errorCbk = require("../misc/callbacks").errorCbk;
 const uploadProductPhotos = require("../middlewares/uploadProductPhotos");
@@ -62,6 +62,7 @@ router.get('/', async (req, res) => {
 });
 router.get('/new', async (req, res) => {
   try {
+  
     const productList = await ProductService.getNewProducts();
     console.log(productList)
     return successCbk(res, 200, { productList });

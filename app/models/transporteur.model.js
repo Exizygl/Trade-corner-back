@@ -5,20 +5,28 @@ const mongoose = require("mongoose");
 const transporteurSchema = new mongoose.Schema(
   {
     transporteur: {
-        type: String,
-        lowercase: true,
+      type: String,
+      lowercase: true,
+    },
+    imageTransporteur: {
+      type: String,
+      default: "",
     },
     commandIdList: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: "command",
-        required: true,
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "command",
+      required: true,
     },
-    transporteurOptionId: {
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: "transporteurOption",
-        required: true,
+     price: {
+      type: Number,
+      required: true,
     },
-    
+    archive: {
+      type: Boolean,
+      default: false,
+    }
+
+
 
   },
   {
