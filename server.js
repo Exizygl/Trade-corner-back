@@ -7,6 +7,7 @@ const productRoutes = require("./app/routes/product.routes");
 const categoryRoutes = require("./app/routes/category.routes");
 const superCategoryRoutes = require("./app/routes/superCategory.routes");
 const roleUserRoutes = require("./app/routes/roleUser.routes");
+const transporteurRoutes = require("./app/routes/transporteur.routes")
 const cors = require("cors");
 const { hasJWT } = require('./app/middlewares/jwt');
 const cookieParser = require("cookie-parser");
@@ -46,6 +47,7 @@ app.use("/api/product", productRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/super-category", superCategoryRoutes);
 app.use("/api/roleUsers", roleUserRoutes);
+app.use("/api/transporteur", transporteurRoutes);
 
 app.get("/api", (req, res) => res.status(200).send({ message: "test server" }));
 

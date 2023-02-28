@@ -2,7 +2,7 @@ const TransporteurDAO = require("../daos/TransporteurDAO");
 
 
 const getAllTransporteur = async () => { 
-    return await CategoryDAO.getAllTransporteur();
+    return await TransporteurDAO.getAllTransporteur();
 };
   
 
