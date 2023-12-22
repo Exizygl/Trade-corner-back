@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const ProductService = require('../services/productService');
 const { hasJWT } = require('../middlewares/jwt');
-const TransporteurService = require('../services/TransporteurService')
+const TransporteurService = require('../services/transporteurService')
 const successCbk = require("../misc/callbacks").successCbk;
 const errorCbk = require("../misc/callbacks").errorCbk;
 const uploadProductPhotos = require("../middlewares/uploadProductPhotos");
