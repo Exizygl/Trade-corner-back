@@ -15,11 +15,20 @@ const sendEmail = (email, key, user, subject, bodyMessage) => {
     secure: false,
     tls: { rejectUnauthorized: false },
     auth: {
-      user: "incubateurnumerique@gmail.com",
-      pass: "mtrnkbwzpdvrmknz",
+      user: "testprojecttradecorneur@gmail.com",
+      pass: "rydr oari jcrz emno",
     },
   });
 
+  // const mailTransporter = nodemailer.createTransport({
+  //   service: "gmail",
+  //   secure: false,
+  //   tls: { rejectUnauthorized: false },
+  //   auth: {
+  //     user: "incubateurnumerique@gmail.com",
+  //     pass: "mtrnkbwzpdvrmknz",
+  //   },
+  // });
   const mailOptions = {
     from: process.env.SENDER_EMAIL_ADDRESS,
     to: email,
@@ -27,6 +36,8 @@ const sendEmail = (email, key, user, subject, bodyMessage) => {
     html: bodyMessage,
   };
   mailTransporter.sendMail(mailOptions, function (err, data) {
+    console.log(mailOptions)
+    console.log(mailTransporter)
     if (err) {
       console.log("Error Occurs");
       console.log(err);

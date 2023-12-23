@@ -12,6 +12,7 @@ router.post('/add', hasJWT, async (req, res) => {
 
 
     try {
+        console.log("toto")
         const command = await CommandService.addCommand(req.files, req.body, req.userId);
 
 
