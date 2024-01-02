@@ -12,6 +12,7 @@ router.post('/add', hasJWT, uploadProductPhotos, async (req, res) => {
   console.log('ça rentre dans la route : ');
 
   try {
+      console.log(req.body)
       const product = await ProductService.addProduct(req.files, req.body, req.userId);// add product to schema
       
       //  const image = await ProductService.uploadImageUser(

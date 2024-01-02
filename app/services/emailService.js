@@ -20,15 +20,6 @@ const sendEmail = (email, key, user, subject, bodyMessage) => {
     },
   });
 
-  // const mailTransporter = nodemailer.createTransport({
-  //   service: "gmail",
-  //   secure: false,
-  //   tls: { rejectUnauthorized: false },
-  //   auth: {
-  //     user: "incubateurnumerique@gmail.com",
-  //     pass: "mtrnkbwzpdvrmknz",
-  //   },
-  // });
   const mailOptions = {
     from: process.env.SENDER_EMAIL_ADDRESS,
     to: email,

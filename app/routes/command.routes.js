@@ -4,16 +4,17 @@ const { hasJWT } = require('../middlewares/jwt');
 
 const successCbk = require("../misc/callbacks").successCbk;
 const errorCbk = require("../misc/callbacks").errorCbk;
-
+const uploadProductPhotos = require("../middlewares/uploadProductPhotos");
 const upload = require("../middlewares/upload");
 
 
-router.post('/add', hasJWT, async (req, res) => {
+router.post('/add', hasJWT, uploadProductPhotos, async (req, res) => {
 
 
     try {
-        console.log("toto")
-        const command = await CommandService.addCommand(req.files, req.body, req.userId);
+        console.log(req.body)
+        
+        const command = await CommandService.addCommand(req.body, req.userId);
 
 
         return successCbk(res, 200, { command });

@@ -49,7 +49,7 @@ app.use("/api/category", categoryRoutes);
 app.use("/api/super-category", superCategoryRoutes);
 app.use("/api/roleUsers", roleUserRoutes);
 app.use("/api/transporteur", transporteurRoutes);
-// app.use("/api/command", commandRoutes);
+app.use("/api/command", commandRoutes);
 
 app.get("/api", (req, res) => res.status(200).send({ message: "test server" }));
 
