@@ -2,7 +2,7 @@ const ProductModel = require('../models/product.model');
 
 const addProduct = async (product) => await new ProductModel(product).save();
 
-const getById = async (id) =>
+const getProductById = async (id) =>
   await ProductModel.findOne({ _id: id })
     .populate('tagIdList', 'tag')
     .populate('categoryId', 'label')
@@ -81,7 +81,7 @@ const search = async (search, tagIdList, orderType, orderValue, minimun, maximun
 
 module.exports = {
   addProduct,
-  getById,
+  getProductById,
   getAllProducts,
   getNewProducts,
   search,

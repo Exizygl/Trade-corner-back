@@ -1,5 +1,6 @@
 const CommandDAO = require("../daos/commandDAO");
-const { archiveProduct } = require("./productService");
+const { getByLabel } = require("../daos/statusCommandDAO");
+const { archiveProduct, getProductById } = require("./productService");
 const { getTransporteurByName } = require("./transporteurService");
 
 
@@ -7,17 +8,19 @@ const { getTransporteurByName } = require("./transporteurService");
 const addCommand = async (command, id) => {
     
     console.log("a")
+
     const transporteur = await getTransporteurByName(command.transporteur)
+
+  
     console.log("b")
 
     const newCommand = {}
     
     newCommand['buyerId'] = id
     newCommand['productIdList'] = command.ids
-    newCommand['status'] = 'waiting'
+    newCommand['status'] = "waiting"
     newCommand['transporteurId'] = transporteur._id
     console.log(newCommand)
-    
     const addCommand = await CommandDAO.addCommand(newCommand);
     console.log("d")
 

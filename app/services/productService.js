@@ -230,7 +230,7 @@ const getProductsFrom = async (id, page) => {
   return result
 };
 
-const getById = async (id) => await ProductDAO.getById(id);
+const getProductById = async (id) => await ProductDAO.getById(id);
 
 const getListId = async (id) => {
   console.log(id)
@@ -355,7 +355,7 @@ const search = async (params) => {
 
 const archiveProduct = async (id) => {
   
-  const product = await ProductDAO.getById(id);
+  const product = await ProductDAO.getProductById(id);
 
   product.archive = true
 
@@ -367,7 +367,7 @@ module.exports = {
   addProduct,
   modifyProduct,
   getAllProducts,
-  getById,
+  getProductById,
   getNewProducts,
   search,
   getProductsFrom,
