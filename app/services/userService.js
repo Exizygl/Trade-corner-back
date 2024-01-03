@@ -290,11 +290,21 @@ const userPasswordChange = async (userInfo) => {
   return await UserDAO.userInfoUpdate(user);
 };
 
-const addCommandId = async (userId, CommandId) => {
+const addCommandId = async (userId, commandId) => {
   
   const user = await UserDAO.getById(userId);
 
-  user.commandIdList(CommandId)
+  user.commandIdList(commandId)
+
+  return await UserDAO.userInfoUpdate(user);
+};
+
+
+const addProductId = async (userId, productId) => {
+  
+  const user = await UserDAO.getById(userId);
+
+  user.productIdList(productId)
 
   return await UserDAO.userInfoUpdate(user);
 };
@@ -312,5 +322,6 @@ module.exports = {
   uploadImageUser,
   userForgottenPassword,
   userPasswordChange,
-  addCommandId
+  addCommandId,
+  addProductId
 };
