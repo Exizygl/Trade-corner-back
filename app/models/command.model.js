@@ -20,11 +20,6 @@ const commandSchema = new mongoose.Schema(
             type: mongoose.Schema.Types.ObjectId,
             ref: "transporteur",
             required: true,
-        },
-        transporteurOptionId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "transporteurOption",
-            required: true,
         }
     },
     {
