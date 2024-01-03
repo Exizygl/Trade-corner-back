@@ -12,7 +12,7 @@ const getTransporteurByName = async (name) => await TransporteurDAO.getByName(na
 module.exports = {
 
     getAllTransporteur,
-    
+    getTransporteurByName
     
   };
   

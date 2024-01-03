@@ -353,7 +353,15 @@ const search = async (params) => {
   return result
 }
 
+const archiveProduct = async (id) => {
+  
+  const product = await ProductDAO.getById(id);
 
+  product.archive = true
+
+  console.log(product)
+  return await ProductDAO.productInfoUpdate(product);
+};
 
 module.exports = {
   addProduct,
@@ -364,5 +372,6 @@ module.exports = {
   search,
   getProductsFrom,
   getListId,
-  deleteProduct
+  deleteProduct,
+  archiveProduct
 };
