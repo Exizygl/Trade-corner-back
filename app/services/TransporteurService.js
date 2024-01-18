@@ -1,4 +1,4 @@
-const TransporteurDAO = require("../daos/TransporteurDAO");
+const TransporteurDAO = require("../daos/transporteurDAO");
 
 
 const getAllTransporteur = async () => { 
