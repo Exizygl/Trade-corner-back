@@ -1,6 +1,6 @@
 const CommandDAO = require("../daos/commandDAO");
 const { archiveProduct, getProductById } = require("./productService");
-const { getTransporteurByName } = require("./transporteurService");
+const { getTransporteurByName } = require("./TransporteurService");
 
 
 
