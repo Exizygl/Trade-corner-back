@@ -1,4 +1,4 @@
-const TransporteurModel = require("../models/Transporteur.model");
+const TransporteurModel = require("../models/transporteur.model");
 
 
 
