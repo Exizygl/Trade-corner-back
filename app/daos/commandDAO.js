@@ -1,4 +1,4 @@
-const CommandModel = require("../models/Command.model");
+const CommandModel = require("../models/command.model");
 const ObjectId = require("mongoose").Types.ObjectId;
 
 const addCommand = async (command) => await new CommandModel(command).save();
