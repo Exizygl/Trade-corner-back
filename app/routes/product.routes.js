@@ -63,7 +63,7 @@ router.get('/', async (req, res) => {
 });
 router.get('/new', async (req, res) => {
   try {
-  
+    console.log("there");
     const productList = await ProductService.getNewProducts();
     console.log(productList)
     return successCbk(res, 200, { productList });

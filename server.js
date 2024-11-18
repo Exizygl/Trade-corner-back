@@ -33,15 +33,12 @@ app.use(bodyParser.json());
 app.use(express.json());
 app.use(cors());
 app.use(cookieParser());
-// app.use(
-//   fileUpload({
-//     useTempFiles: true,
-//   })
-// );
+
+
 app.use('/static', express.static(__dirname + '/public'));
 
 //Routes
-
+console.log("here");
 app.use("/api/user", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/product", productRoutes);
