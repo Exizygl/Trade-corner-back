@@ -24,10 +24,7 @@ module.exports = {
 mongoose
   .connect("mongodb+srv://" +
      process.env.DB_USER_PASS +
-     "@cluster0.u0yygyt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+     "@cluster0.u0yygyt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {dbName: 'e-commerce'})
   .then((res) => {
     console.log("Database connected");
   })
